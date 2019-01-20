@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, Image, View} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import TRC from 'toto-react-components';
+import moment from 'moment';
 
 /**
  * Flat List styled for toto.
@@ -17,8 +18,11 @@ import TRC from 'toto-react-components';
  *                              sign :    an image to put as a "sign" (e.g. info sign to show that this item has info attached)
  *                                        should be a loaded image, (provided as require(..), so already loaded)
  *                              dateRange:  an object that describes a range of date. That will be used instead of an avatar
- *                                          { start: 'starting date', formatted as YYYYMMDD string
- *                                            end: 'ending date', formatted as YYYYMMDD string
+ *                                          { start:  'starting date', formatted as YYYYMMDD string
+ *                                            end:    'ending date', formatted as YYYYMMDD string,
+ *                                            type:   the type of date range. Can be:
+ *                                                    'dayMonth' to only show the day and the month (default)
+ *                                                    'dayMonthYear' - same as dayMonth but will add the year of the END value on the right
  *                                          }
  *                            }
  *  - onItemPress()         : a function to be called when the item is pressed
@@ -123,10 +127,27 @@ class Item extends Component {
 
     if (data.dateRange != null) {
 
+      // Render a dayMonth type
+      if (data.dateRange.type == null || data.dateRange.type.startsWith('dayMonth')) {
+
+        // Dates to display
         let startDateDay = moment(data.dateRange.start, 'YYYYMMDD').format('D');
         let startDateMonth = moment(data.dateRange.start, 'YYYYMMDD').format('MMM');
         let endDateDay = moment(data.dateRange.end, 'YYYYMMDD').format('D');
         let endDateMonth = moment(data.dateRange.end, 'YYYYMMDD').format('MMM');
+
+        // Year label
+        let year;
+
+        // In case of dayMonthYear, add the end year to the side of the boxes
+        if (data.dateRange.type == 'dayMonthYear') {
+
+          let yearLabel = moment(data.dateRange.end, 'YYYYMMDD').format('YYYY');
+
+          year = (
+            <Text style={styles.yearTextTruncated}>{yearLabel}</Text>
+          )
+        }
 
         dateRange = (
           <View style={styles.dateRangeContainer}>
@@ -138,8 +159,10 @@ class Item extends Component {
               <Text style={styles.dateDay}>{endDateDay}</Text>
               <Text style={styles.dateMonth}>{endDateMonth}</Text>
             </View>
+            {year}
           </View>
         )
+      }
     }
 
     // If there is a sign
@@ -223,5 +246,33 @@ const styles = StyleSheet.create({
     tintColor: TRC.TotoTheme.theme.COLOR_ACCENT_LIGHT
   },
   dateRangeContainer: {
-  }
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  dateContainer: {
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
+    marginHorizontal: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    width: 40,
+  },
+  dateDay: {
+    fontSize: 16,
+    color: TRC.TotoTheme.theme.COLOR_TEXT
+  },
+  dateMonth: {
+    textTransform: 'uppercase',
+    fontSize: 10,
+    color: TRC.TotoTheme.theme.COLOR_TEXT
+  },
+  yearTextTruncated: {
+    fontSize: 14,
+    width: 20,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    marginLeft: 6,
+  },
 })

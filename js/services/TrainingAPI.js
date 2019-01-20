@@ -43,4 +43,13 @@ export default class TrainingAPI {
 
   }
 
+  /**
+   * Retrieves the workouts of the specified plan
+   */
+  getPlanWorkouts(planId) {
+
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts')
+        .then((response) => response.json());
+  }
+
 }

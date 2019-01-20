@@ -1,0 +1,34 @@
+{
+  "name": "TotoReactTraining",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "d3": "^5.7.0",
+    "d3-array": "^1.2.4",
+    "d3-axis": "^1.0.12",
+    "d3-path": "^1.0.7",
+    "d3-scale": "^2.1.2",
+    "d3-shape": "^1.2.2",
+    "memoize-one": "^4.0.2",
+    "moment": "^2.22.2",
+    "react": "16.6.3",
+    "react-native": "0.57.8",
+    "react-native-google-signin": "^1.0.0-rc6",
+    "react-native-swiper": "^1.5.13",
+    "react-navigation": "^2.18.0",
+    "toto-react-components": "1.15.5"
+  },
+  "devDependencies": {
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.51.1",
+    "react-test-renderer": "16.6.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

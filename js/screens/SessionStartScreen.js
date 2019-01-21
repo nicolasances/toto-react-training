@@ -35,7 +35,8 @@ export default class SessionStartScreen extends Component<Props> {
 
     this.state = {
       plans: [],
-      workouts: null
+      workouts: null,
+      muscles: []
     }
 
     // Load the data
@@ -44,6 +45,7 @@ export default class SessionStartScreen extends Component<Props> {
     // Bindings
     this.onSelectPlan = this.onSelectPlan.bind(this);
     this.onWorkoutSelected = this.onWorkoutSelected.bind(this);
+    this.updateAffectedMuscles = this.updateAffectedMuscles.bind(this);
 
   }
 
@@ -57,6 +59,23 @@ export default class SessionStartScreen extends Component<Props> {
       this.setState({
         plans: data.plans
       });
+    });
+  }
+
+  /**
+   * Retrieves the list of affected muscles
+   */
+  updateAffectedMuscles(workout) {
+
+    new TrainingAPI().getWorkoutMuscles(workout.planId, workout.id).then((data) => {
+
+      var newMuscles = [...this.state.muscles, ...data.muscles];
+
+      // Update the state
+      this.setState({
+        muscles: newMuscles
+      });
+
     });
   }
 
@@ -95,9 +114,13 @@ export default class SessionStartScreen extends Component<Props> {
    */
   onWorkoutSelected(workout) {
 
+    // Update the state
     this.setState({
       workouts: {...this.state.workouts, workout}
     });
+
+    // Update the list of affected muscles
+    this.updateAffectedMuscles(workout);
 
   }
 
@@ -138,11 +161,46 @@ export default class SessionStartScreen extends Component<Props> {
     let emptyMessage;
 
     if (this.state.workouts == null || this.state.workouts.size == 0) emptyMessage = (
+
       <View style={{flexDirection: 'row'}}>
         <Image style={styles.emptyMessageIcon} source={require('../../img/down-arrow.png')} />
         <Text style={styles.emptyMessage}>Add some workout!</Text>
       </View>
     )
+
+    // Affected Muscles
+    let muscles;
+
+    if (this.state.muscles.length > 0) {
+
+      let muscleIcons = [];
+
+      for (var i = 0; i < this.state.muscles.length; i++) {
+
+        let muscleName = this.state.muscles[i];
+
+        let icon = (
+          <View style={styles.muscleIconContainer} key={muscleName}>
+            <Text style={styles.muscleFirstLetter}>{muscleName.substring(0, 1).toUpperCase()}</Text>
+            <Text style={styles.muscleSecondLetter}>{muscleName.substring(1, 2)}</Text>
+          </View>
+        );
+
+        muscleIcons.push(icon);
+      }
+
+      muscles = (
+
+        <View style={styles.musclesIconsContainer}>
+          {muscleIcons}
+
+          <TRC.TotoIconButton
+              image={require('../../img/tick.png')}
+              size='m'
+              />
+        </View>
+      )
+    }
 
     return (
       <View style={styles.container}>
@@ -151,6 +209,7 @@ export default class SessionStartScreen extends Component<Props> {
           {today}
           <View style={styles.musclesContainer}>
             {emptyMessage}
+            {muscles}
           </View>
         </View>
 
@@ -177,6 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 12,
     marginVertical: 12,
+    marginBottom: 24,
   },
   todayContainer: {
     paddingHorizontal: 24,
@@ -221,4 +281,29 @@ const styles = StyleSheet.create({
     tintColor: TRC.TotoTheme.theme.COLOR_ACCENT,
     marginRight: 12,
   },
+  musclesIconsContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  muscleIconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    borderWidth: 2,
+    borderRadius: 35,
+    width: 70,
+    height: 70,
+    marginRight: 12,
+  },
+  muscleFirstLetter: {
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    fontSize: 30,
+  },
+  muscleSecondLetter: {
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    fontSize: 30,
+  }
 });

@@ -52,4 +52,14 @@ export default class TrainingAPI {
         .then((response) => response.json());
   }
 
+  /**
+   * Retrieves the muscles of a specific workout
+   */
+  getWorkoutMuscles(planId, workoutId) {
+
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/muscles')
+          .then((response) => response.json());
+
+  }
+
 }

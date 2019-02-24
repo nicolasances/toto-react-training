@@ -37,6 +37,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Retrieves the sessions that exist for today
+   */
+  getTodaySessions() {
+
+    return new TotoAPI().fetch('/training/session/sessions?date=' + moment().format('YYYYMMDD'))
+          .then((response) => response.json());
+
+  }
+
+  /**
    * Starts a gym training session in the specified date, with the specified workouts
    */
   startSession(date, workouts) {

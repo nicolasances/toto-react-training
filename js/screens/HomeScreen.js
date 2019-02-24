@@ -118,7 +118,7 @@ export default class HomeScreen extends Component<Props> {
             image={require('../../img/man-training.png')}
             size='xxl'
             label='Go on, train!'
-            onPress={() => {this.props.navigation.navigate('SessionStartScreen')}}
+            onPress={() => {this.props.navigation.navigate('SessionExecutionScreen', {sessionId: this.state.todaySessions[0].id})}}
             />
 
       </View>

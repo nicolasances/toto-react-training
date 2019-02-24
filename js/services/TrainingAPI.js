@@ -47,6 +47,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Retrieve the specified session
+   */
+  getSession(id) {
+
+    return new TotoAPI().fetch('/training/session/sessions/' + id)
+          .then((response) => response.json());
+
+  }
+
+  /**
    * Starts a gym training session in the specified date, with the specified workouts
    */
   startSession(date, workouts) {

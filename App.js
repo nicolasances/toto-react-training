@@ -4,6 +4,8 @@ import { createStackNavigator } from 'react-navigation';
 import TRC from 'toto-react-components';
 import user from './js/User';
 
+console.log(TRC);
+
 // Navigation import
 import HomeScreen from './js/screens/HomeScreen';
 import SessionStartScreen from './js/screens/SessionStartScreen';
@@ -136,6 +138,7 @@ export default class App extends Component {
     return (
       <View style={{flex: 1}}>
         <RootStack />
+        <TRC.TotoNotification />
       </View>
     );
   }

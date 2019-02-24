@@ -35,7 +35,7 @@ export default class SessionStartScreen extends Component<Props> {
 
     this.state = {
       plans: [],
-      workouts: null,
+      workouts: [],
       muscles: []
     }
 
@@ -46,6 +46,7 @@ export default class SessionStartScreen extends Component<Props> {
     this.onSelectPlan = this.onSelectPlan.bind(this);
     this.onWorkoutSelected = this.onWorkoutSelected.bind(this);
     this.updateAffectedMuscles = this.updateAffectedMuscles.bind(this);
+    this.onStart = this.onStart.bind(this);
 
   }
 
@@ -116,7 +117,7 @@ export default class SessionStartScreen extends Component<Props> {
 
     // Update the state
     this.setState({
-      workouts: {...this.state.workouts, workout}
+      workouts: [...this.state.workouts, workout]
     });
 
     // Update the list of affected muscles
@@ -134,6 +135,41 @@ export default class SessionStartScreen extends Component<Props> {
       plan: item.item,
       onSelect: this.onWorkoutSelected
     });
+  }
+
+  /**
+   * Starts the session
+   */
+  onStart() {
+
+    let workouts = [];
+
+    // Get the workouts to add to the session
+    for (var i = 0; i < this.state.workouts.length; i++) {
+
+      workouts.push({
+        planId: this.state.workouts[i].planId,
+        workoutId: this.state.workouts[i].id
+      })
+    }
+
+    // Start the session!
+    new TrainingAPI().startSession(moment().format('YYYYMMDD'), workouts).then((data) => {
+
+      if (data.id != null) {
+
+        // Publish an event
+        TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.sessionCreated, context: {sessionId: data.id}});
+
+        // Publish a notification
+        TRC.TotoEventBus.bus.publishEvent({name: 'notification', context: {text: 'The session has been started!'}});
+
+        // Go back
+        this.props.navigation.goBack();
+      }
+
+    });
+
   }
 
   /**
@@ -168,6 +204,22 @@ export default class SessionStartScreen extends Component<Props> {
       </View>
     )
 
+    // Button to start the session
+    let startButton;
+
+    if (this.state.muscles.length > 0) {
+
+      startButton = (
+        <TRC.TotoIconButton
+              image={require('../../img/tick.png')}
+              label='Start the session!'
+              size='xl'
+              onPress={this.onStart}
+              />
+      )
+
+    }
+
     // Affected Muscles
     let muscles;
 
@@ -193,11 +245,6 @@ export default class SessionStartScreen extends Component<Props> {
 
         <View style={styles.musclesIconsContainer}>
           {muscleIcons}
-
-          <TRC.TotoIconButton
-              image={require('../../img/tick.png')}
-              size='m'
-              />
         </View>
       )
     }
@@ -207,11 +254,12 @@ export default class SessionStartScreen extends Component<Props> {
 
         <View style={styles.sessionContainer}>
           {today}
-          <View style={styles.musclesContainer}>
+          <View style={styles.actionsContainer}>
             {emptyMessage}
-            {muscles}
+            {startButton}
           </View>
         </View>
+        {muscles}
 
         <TotoFlatList
             data={this.state.plans}
@@ -265,7 +313,7 @@ const styles = StyleSheet.create({
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     opacity: 0.9,
   },
-  musclesContainer: {
+  actionsContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 12,
@@ -283,9 +331,9 @@ const styles = StyleSheet.create({
   },
   musclesIconsContainer: {
     flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-    marginLeft: 12,
+    justifyContent: 'center',
+    marginHorizontal: 12,
+    marginBottom: 12
   },
   muscleIconContainer: {
     flexDirection: 'row',

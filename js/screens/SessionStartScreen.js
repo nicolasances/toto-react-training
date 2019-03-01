@@ -196,7 +196,7 @@ export default class SessionStartScreen extends Component<Props> {
     // "Add some workout!"
     let emptyMessage;
 
-    if (this.state.workouts == null || this.state.workouts.size == 0) emptyMessage = (
+    if (this.state.workouts == null || this.state.workouts.length == 0) emptyMessage = (
 
       <View style={{flexDirection: 'row'}}>
         <Image style={styles.emptyMessageIcon} source={require('../../img/down-arrow.png')} />

@@ -27,6 +27,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Retrieves the specified workout
+   */
+  getWorkout(planId, workoutId) {
+
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId)
+          .then((response) => response.json());
+
+  }
+
+  /**
    * Retrieves the muscles of a specific workout
    */
   getWorkoutMuscles(planId, workoutId) {
@@ -52,6 +62,16 @@ export default class TrainingAPI {
   getSession(id) {
 
     return new TotoAPI().fetch('/training/session/sessions/' + id)
+          .then((response) => response.json());
+
+  }
+
+  /**
+   * Retrieves the exercises of the session
+   */
+  getSessionExercises(sessionId) {
+
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises')
           .then((response) => response.json());
 
   }

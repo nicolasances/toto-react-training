@@ -3,6 +3,7 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, S
 import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
+import HomeHeader from '../components/HomeHeader';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -126,6 +127,8 @@ export default class HomeScreen extends Component<Props> {
 
     return (
       <View style={styles.container}>
+
+        <HomeHeader />
 
         {startButton}
         {jumpInSession}

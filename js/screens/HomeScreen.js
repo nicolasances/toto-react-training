@@ -4,6 +4,7 @@ import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import HomeHeader from '../components/HomeHeader';
+import IntesityGraph from '../components/IntesityGraph';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -130,8 +131,9 @@ export default class HomeScreen extends Component<Props> {
 
         <HomeHeader />
 
-        {startButton}
-        {jumpInSession}
+        <View style={{flex: 1}} />
+
+        <IntesityGraph />
 
       </View>
     );

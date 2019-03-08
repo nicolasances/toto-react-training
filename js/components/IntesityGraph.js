@@ -3,65 +3,90 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, S
 import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
+import IntensityChart from './IntensityChart';
+import moment from 'moment';
 
-export default class HomeHeader extends Component {
+export default class IntesityGraph extends Component {
 
   constructor(props) {
 
     super(props);
 
     this.state = {
-      trainingTime: null
     };
+
+    // Binding functions to this
+    this.xLabel = this.xLabel.bind(this);
   }
 
+  /**
+   * On mounting
+   */
+  componentDidMount() {
+
+    this.loadIntensityData();
+  }
+
+  /**
+   * Loads the intensity data
+   */
+  loadIntensityData() {
+
+    new TrainingAPI().getIntensityData(8).then((data) => {
+
+      this.setState({days: data.days});
+
+    })
+
+  }
+
+  /**
+   * Data for the chart
+   */
+  makeData(days) {
+
+    if (days == null) return [];
+
+    let data = [];
+
+    for (var i = 0; i < days.length; i++) {
+
+      data.push({
+        x: i,
+        y: days[i].muscles ? days[i].muscles.length : 0
+      });
+    }
+
+    return data;
+
+  }
+
+  /**
+   * Generate the x label for the provided datum
+   */
+  xLabel(xValue) {
+
+    // xValue is the index of the array this.state.days
+    if (this.state.days == null || this.state.days.length <= xValue) return '';
+
+    let day = this.state.days[xValue];
+
+    return moment(day.date, 'YYYYMMDD').format('dd');
+
+  }
+
+  /**
+   * Render
+   */
   render() {
 
-    // Components
-    let leftButton, rightButton, time;
-
-    // Left Button
-    leftButton = (
-      <View style={styles.buttonContainer}>
-        <TRC.TotoIconButton image={require('../../img/calendar.png')} size="l" label="Calendar" />
-      </View>
-    )
-
-    // Time
-    if (this.state.trainingTime != null) time = (
-      <View style={styles.timeContainer}>
-        <Text style={styles.timeLabel}>Today you trained</Text>
-        <View style={styles.timeTextContainer}>
-          <Text style={styles.timeText}>{this.state.trainingTime}</Text>
-          <Text style={styles.timeUnitText}>min</Text>
-        </View>
-      </View>
-    )
-    else time = (
-      <View style={styles.timeContainer}>
-        <Text style={styles.timeLabel}>Today</Text>
-        <View style={styles.timeTextContainer}>
-          <Image source={require('../../img/sleep.png')} style={styles.timeImg} />
-        </View>
-      </View>
-
-    )
-
-    // Right button
-    rightButton = (
-      <View style={styles.buttonContainer}>
-        <TRC.TotoIconButton image={require('../../img/man-training.png')} size="l" label="Start training" />
-      </View>
-    )
+    // Create the data for the chart
+    let data = this.makeData(this.state.days);
 
     return (
       <View style={styles.container}>
 
-        {leftButton}
-
-        {time}
-
-        {rightButton}
+        <IntensityChart data={this.state.days} />
 
       </View>
     )

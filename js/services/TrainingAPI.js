@@ -92,4 +92,14 @@ export default class TrainingAPI {
 
   }
 
+  /**
+   * Gets the data to display the intensity chart
+   */
+  getIntensityData(maxDays) {
+
+    return new TotoAPI().fetch('/training/stats/intensity?days=' + maxDays)
+          .then((response) => response.json());
+
+  }
+
 }

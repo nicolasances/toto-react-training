@@ -298,6 +298,12 @@ export default class SessionExecutionScreen extends Component<Props> {
 
         <View style={styles.header}>
           {today}
+          <View style={{marginLeft: 12}} >
+            <TRC.TotoIconButton image={require('../../img/tick.png')} />
+          </View>
+          <View style={{marginLeft: 6}} >
+            <TRC.TotoIconButton image={require('../../img/trash.png')} size='s' />
+          </View>
           {workouts}
         </View>
 
@@ -310,15 +316,23 @@ export default class SessionExecutionScreen extends Component<Props> {
 
         <Modal  animationType="slide" transparent={false} visible={this.state.moodModalVisible}>
           <View style={styles.moodModal}>
-            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('ok')}}>
-              <Image source={require('../../img/moods/ok.png')} style={styles.moodImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('tired')}}>
-              <Image source={require('../../img/moods/tired.png')} style={styles.moodImage} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('dead')}}>
-              <Image source={require('../../img/moods/dead.png')} style={styles.moodImage} />
-            </TouchableOpacity>
+            <View style={styles.moodModalTitleContainer}>
+              <Text style={styles.moodModalTitle}>How do you feel after the exercise?</Text>
+            </View>
+            <View style={styles.moodModalIconsContainer}>
+              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('ok')}}>
+                <Image source={require('../../img/moods/ok.png')} style={styles.moodImage} />
+                <Text style={styles.moodCaption}>Fine</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('tired')}}>
+                <Image source={require('../../img/moods/tired.png')} style={styles.moodImage} />
+                <Text style={styles.moodCaption}>Tired</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('dead')}}>
+                <Image source={require('../../img/moods/dead.png')} style={styles.moodImage} />
+                <Text style={styles.moodCaption}>Dead</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Modal>
 
@@ -338,60 +352,82 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center',
     marginBottom: 24,
     paddingHorizontal: 12,
   },
   todayContainer: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: 4,
+    width: 130,
+    height: 130,
+    borderRadius: 65,
     borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   todayDayOfWeek: {
     textTransform: 'uppercase',
     fontSize: 14,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayDay: {
     fontSize: 30,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayMonth: {
     fontSize: 12,
     textTransform: 'uppercase',
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayYear: {
     fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
     opacity: 0.9,
   },
   workoutsTitleContainer: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
+    paddingLeft: 9
   },
   workoutTitle: {
-    fontSize: 22,
+    fontSize: 16,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
-    marginTop: 6,
+    marginVertical: 3,
   },
   moodModal: {
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
   },
+  moodModalTitleContainer: {
+    marginBottom: 48,
+    marginTop: 64,
+  },
+  moodModalTitle: {
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    fontSize: 20
+  },
+  moodModalIconsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
   moodContainer: {
     marginHorizontal: 12,
+    alignItems: 'center'
   },
   moodImage: {
     width: 48,
     height: 48,
     tintColor: TRC.TotoTheme.theme.COLOR_TEXT,
+  },
+  moodCaption: {
+    fontSize: 12,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    marginTop: 9
   },
 });

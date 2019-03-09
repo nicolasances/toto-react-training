@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   },
   painBubble: {
     borderWidth: 1,
-    borderColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
+    borderColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
     marginTop: 9
   },
 

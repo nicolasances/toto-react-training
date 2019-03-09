@@ -71,7 +71,7 @@ export default class TrainingAPI {
    */
   getSessionExercises(sessionId) {
 
-    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises')
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises?sort=order')
           .then((response) => response.json());
 
   }
@@ -99,6 +99,34 @@ export default class TrainingAPI {
 
     return new TotoAPI().fetch('/training/stats/intensity?days=' + maxDays)
           .then((response) => response.json());
+
+  }
+
+  /**
+   * Completes the specified exercise
+   */
+  completeExercise(sessionId, exerciseId) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises/' + exerciseId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({completed: true})
+    }).then((response => response.json()));
+
+  }
+
+  /**
+   * Changes the mood of an exercise
+   */
+  setExerciseMood(sessionId, exerciseId, mood) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises/' + exerciseId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({mood: mood})
+    }).then((response => response.json()));
 
   }
 

@@ -4,6 +4,10 @@ import { withNavigation } from 'react-navigation';
 import TRC from 'toto-react-components';
 import moment from 'moment';
 
+var imgTired = require('../../img/moods/tired.png');
+var imgOk = require('../../img/moods/ok.png');
+var imgDead = require('../../img/moods/dead.png');
+
 /**
  * Flat List styled for toto.
  * To use this you must provide:
@@ -28,6 +32,7 @@ import moment from 'moment';
  *                            }
  *  - onItemPress()         : a function to be called when the item is pressed
  *  - avatarImageLoader()   : a function(item) that will have to load the avatar image and return a loaded <Image />
+ *  - onAvatarPress()       : (optional) a function(item) to be called when the avatar is pressed
  */
 export default class GymExercisesList extends Component {
 
@@ -43,7 +48,7 @@ export default class GymExercisesList extends Component {
     return (
       <FlatList
         data={this.props.data}
-        renderItem={(item) => <Item item={item} avatarImageLoader={this.props.avatarImageLoader} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress}/>}
+        renderItem={(item) => <Item item={item} avatarImageLoader={this.props.avatarImageLoader} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress} onAvatarPress={this.props.onAvatarPress} onMoodPress={this.props.onMoodPress}/>}
         keyExtractor={(item, index) => {return 'toto-flat-list-' + index}}
         />
     )
@@ -64,6 +69,7 @@ class Item extends Component {
 
     // Bind this
     this.onDataChanged = this.onDataChanged.bind(this);
+
   }
 
   componentDidMount() {
@@ -89,89 +95,51 @@ class Item extends Component {
     // The data to render
     var data = this.props.dataExtractor(this.state);
 
+    // Define the styles, based on the state of completion the exercise
+    let completed = this.props.item.item.completed;
+    let imageStyle, imageSource, imageContainerStyle;
+
+    if (completed) { 
+      imageSource = require('../../img/tick.png');
+      imageStyle = {tintColor: '#b9b9b9'};
+      imageContainerStyle = {backgroundColor: '#B2EBF2', borderColor: '#B2EBF2'};
+      textColor = {color: TRC.TotoTheme.theme.COLOR_TEXT, opacity: 0.7};
+      subtitleColor = {color: TRC.TotoTheme.theme.COLOR_TEXT, opacity: 0.7};
+      signColor = {tintColor: TRC.TotoTheme.theme.COLOR_TEXT, opacity: 0.7};
+    }
+    else {
+      imageSource = data.avatar.value;
+      imageStyle = {tintColor: TRC.TotoTheme.theme.COLOR_TEXT};
+      imageContainerStyle = {borderColor: TRC.TotoTheme.theme.COLOR_TEXT};
+      textColor = {color: TRC.TotoTheme.theme.COLOR_TEXT};
+      subtitleColor = {color: TRC.TotoTheme.theme.COLOR_TEXT, opacity: 0.9};
+      signColor = {tintColor: TRC.TotoTheme.theme.COLOR_TEXT};
+    }
+
     // Define what avatar has to be rendered
     let avatarContainer;
 
     // If there's an avatar
     if (data.avatar != null) {
 
-      let avatar;
-
-      // If the avatar is a NUMBER
-      if (data.avatar.type == 'number') {
-        avatar = <Text style={styles.avatarText}>{data.avatar.value.toFixed(0)}</Text>
-      }
-      // If the avatar is an IMAGE
-      else if (data.avatar.type == 'image') {
-        // If there's a source:
-        if (data.avatar.value) avatar = <Image source={data.avatar.value}  style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
-        // If there's a configured image Loader
-        else if (this.props.avatarImageLoader) {
-          // Load the image
-          avatar = this.props.avatarImageLoader(this.state);
-        }
-      }
-      // For any other type of avatar, display nothing
-      else {
-        avatar = <Text></Text>
-      }
+      let avatar = (<Image source={imageSource} style={[imageStyle, {width: 20, height: 20}]} />);
 
       avatarContainer = (
-        <TouchableOpacity style={styles.avatar}>
+        <TouchableOpacity style={[imageContainerStyle, styles.avatar]} onPress={() => {if (this.props.onAvatarPress) this.props.onAvatarPress(this.props.item)}}>
           {avatar}
         </TouchableOpacity>
       )
     }
 
-    // If there's a DATE RANGE, instead of the avatar
-    let dateRange;
+    // Define the mood image
+    let moodImage;
+    if (this.props.item.item.mood == 'ok') moodImage = imgOk;
+    else if (this.props.item.item.mood == 'tired') moodImage = imgTired;
+    else if (this.props.item.item.mood == 'dead') moodImage = imgDead;
 
-    if (data.dateRange != null) {
-
-      // Render a dayMonth type
-      if (data.dateRange.type == null || data.dateRange.type.startsWith('dayMonth')) {
-
-        // Dates to display
-        let startDateDay = moment(data.dateRange.start, 'YYYYMMDD').format('D');
-        let startDateMonth = moment(data.dateRange.start, 'YYYYMMDD').format('MMM');
-        let endDateDay = moment(data.dateRange.end, 'YYYYMMDD').format('D');
-        let endDateMonth = moment(data.dateRange.end, 'YYYYMMDD').format('MMM');
-
-        // Year label
-        let year;
-
-        // In case of dayMonthYear, add the end year to the side of the boxes
-        if (data.dateRange.type == 'dayMonthYear') {
-
-          let yearLabel = moment(data.dateRange.end, 'YYYYMMDD').format('YYYY');
-
-          year = (
-            <Text style={styles.yearTextTruncated}>{yearLabel}</Text>
-          )
-        }
-
-        dateRange = (
-          <View style={styles.dateRangeContainer}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateDay}>{startDateDay}</Text>
-              <Text style={styles.dateMonth}>{startDateMonth}</Text>
-            </View>
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateDay}>{endDateDay}</Text>
-              <Text style={styles.dateMonth}>{endDateMonth}</Text>
-            </View>
-            {year}
-          </View>
-        )
-      }
-    }
-
-    // If there is a sign
-    let sign;
-
-    if (data.sign) sign = (
-      <TouchableOpacity style={styles.signContainer}>
-        <Image source={data.sign} style={styles.sign} />
+    let sign = (
+      <TouchableOpacity style={styles.signContainer} onPress={() => {if (this.props.onMoodPress) this.props.onMoodPress(this.props.item)}}>
+        <Image source={moodImage} style={[signColor, styles.sign]} />
       </TouchableOpacity>
     )
 
@@ -182,8 +150,8 @@ class Item extends Component {
       <View style={styles.item2} onPress={() => {if (this.props.onItemPress) this.props.onItemPress(this.props.item)}}>
 
         <TouchableOpacity style={styles.textContainer}>
-          <Text style={{color: TRC.TotoTheme.theme.COLOR_TEXT}}>{data.title2}</Text>
-          <Text style={{color: TRC.TotoTheme.theme.COLOR_TEXT, fontSize: 12, opacity: 0.9}}>{data.subtitle2}</Text>
+          <Text style={textColor}>{data.title2}</Text>
+          <Text style={[subtitleColor, {fontSize: 12}]}>{data.subtitle2}</Text>
         </TouchableOpacity>
 
       </View>
@@ -195,18 +163,12 @@ class Item extends Component {
 
           {avatarContainer}
 
-          {dateRange}
-
           <TouchableOpacity style={styles.textContainer}>
-            <Text style={{color: TRC.TotoTheme.theme.COLOR_TEXT}}>{data.title}</Text>
-            <Text style={{color: TRC.TotoTheme.theme.COLOR_TEXT, fontSize: 12, opacity: 0.9}}>{data.subtitle1}</Text>
+            <Text style={textColor}>{data.title}</Text>
+            <Text style={[subtitleColor, {fontSize: 12}]}>{data.subtitle1}</Text>
           </TouchableOpacity>
 
           {sign}
-
-          <View style={styles.leftSideValueContainer}>
-            <Text style={styles.leftSideValue}>{data.leftSideValue}</Text>
-          </View>
 
         </View>
         {item2}
@@ -236,27 +198,15 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
     justifyContent: 'center',
     alignItems: 'center',
 
-  },
-  avatarText: {
-    fontSize: 12,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   textContainer: {
     flex: 1,
     height: 40,
     justifyContent: 'center',
     paddingLeft: 12,
-  },
-  leftSideValueContainer: {
-    justifyContent: 'center',
-  },
-  leftSideValue: {
-    fontSize: 14,
-    color: TRC.TotoTheme.theme.COLOR_TEXT
   },
   signContainer: {
     marginLeft: 12,
@@ -265,36 +215,5 @@ const styles = StyleSheet.create({
   sign: {
     width: 18,
     height: 18,
-    tintColor: TRC.TotoTheme.theme.COLOR_TEXT
-  },
-  dateRangeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  dateContainer: {
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
-    marginHorizontal: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    width: 40,
-  },
-  dateDay: {
-    fontSize: 16,
-    color: TRC.TotoTheme.theme.COLOR_TEXT
-  },
-  dateMonth: {
-    textTransform: 'uppercase',
-    fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT
-  },
-  yearTextTruncated: {
-    fontSize: 14,
-    width: 20,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-    marginLeft: 6,
   },
 })

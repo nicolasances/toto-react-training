@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
+import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Modal} from 'react-native';
 import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
@@ -45,11 +45,17 @@ export default class SessionExecutionScreen extends Component<Props> {
 
     this.state = {
       session: null,
-      workouts: []
+      workouts: [],
+      moodModalVisible: false,
+      selectedExercise: null
     }
 
     // Bindings
     this.loadWorkouts = this.loadWorkouts.bind(this);
+    this.selectMood = this.selectMood.bind(this);
+    this.changeMood = this.changeMood.bind(this);
+    this.onExerciseCompleted = this.onExerciseCompleted.bind(this);
+    this.onExerciseMoodChanged = this.onExerciseMoodChanged.bind(this);
 
   }
 
@@ -58,7 +64,8 @@ export default class SessionExecutionScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
 
     // Load data
     this.loadSession();
@@ -67,7 +74,8 @@ export default class SessionExecutionScreen extends Component<Props> {
 
   componentWillUnmount() {
     // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
   }
 
   /**
@@ -133,11 +141,6 @@ export default class SessionExecutionScreen extends Component<Props> {
     let title1, title2;
     let subtitle1, subtitle2;
     let avatar = {type: 'image'};
-    let sign;
-
-    if (ex.mood == 'ok') sign = imgOk;
-    else if (ex.mood == 'tired') sign = imgTired;
-    else if (ex.mood == 'dead') sign = imgDead;
 
     if (ex.type == 'single') {
       s1 = ex.sets; r1 = ex.reps; w1 = ex.weight;
@@ -184,8 +187,64 @@ export default class SessionExecutionScreen extends Component<Props> {
       subtitle1: subtitle1,
       subtitle2: subtitle2,
       avatar: avatar,
-      sign: sign
     }
+
+  }
+
+  /**
+   * Reacts to the click of the exercise avatar, which will trigger the completion (or un-completion) of the exercise
+   */
+  onExerciseAvatarPress(item) {
+
+    new TrainingAPI().completeExercise(item.item.sessionId, item.item.id).then((data) => {
+
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.exerciseCompleted, context: {sessionId: item.item.sessionId, exerciseId: item.item.id}})
+    });
+  }
+
+  /**
+   * Reacts to the completion of an exercise
+   */
+  onExerciseCompleted(event) {
+
+    this.loadExercises();
+
+  }
+
+  /**
+   * Reacts to the completion of an exercise
+   */
+  onExerciseMoodChanged(event) {
+
+    this.loadExercises();
+
+  }
+
+  /**
+   * Reacts to the request to select a new mood for the specified list item
+   */
+  selectMood(item) {
+
+    // Show the modal and set the selected exercise
+    this.setState({moodModalVisible: true, selectedExercise: item.item});
+
+  }
+
+  /**
+   * New mood to set
+   */
+  changeMood(newMood) {
+
+    // Hide the modal
+    this.setState({moodModalVisible: false});
+
+    if (this.state.selectedExercise == null) return;
+
+    // CAll the API
+    new TrainingAPI().setExerciseMood(this.state.session.id, this.state.selectedExercise.id, newMood).then((data) => {
+
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.exerciseMoodChanged, context: {exerciseId: this.state.selectedExercise.id}});
+    })
 
   }
 
@@ -245,8 +304,23 @@ export default class SessionExecutionScreen extends Component<Props> {
         <GymExercisesList
             data={this.state.exercises}
             dataExtractor={this.exerciseDataExtractor}
-            onItemPress={this.onSelectPlan}
+            onAvatarPress={this.onExerciseAvatarPress}
+            onMoodPress={this.selectMood}
             />
+
+        <Modal  animationType="slide" transparent={false} visible={this.state.moodModalVisible}>
+          <View style={styles.moodModal}>
+            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('ok')}}>
+              <Image source={require('../../img/moods/ok.png')} style={styles.moodImage} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('tired')}}>
+              <Image source={require('../../img/moods/tired.png')} style={styles.moodImage} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('dead')}}>
+              <Image source={require('../../img/moods/dead.png')} style={styles.moodImage} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
 
       </View>
     );
@@ -260,12 +334,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     paddingTop: 24,
-    paddingHorizontal: 12,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     marginBottom: 24,
+    paddingHorizontal: 12,
   },
   todayContainer: {
     paddingHorizontal: 24,
@@ -304,5 +378,20 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginTop: 6,
+  },
+  moodModal: {
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  moodContainer: {
+    marginHorizontal: 12,
+  },
+  moodImage: {
+    width: 48,
+    height: 48,
+    tintColor: TRC.TotoTheme.theme.COLOR_TEXT,
   },
 });

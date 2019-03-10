@@ -4,7 +4,7 @@ import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import GymExercisesList from '../components/GymExercisesList';
-import ExerciseSettings from '../components/ExerciseSettings';
+import ExerciseSettings from '../components/util/settings/ExerciseSettings';
 import ExerciseMood from '../components/ExerciseMood';
 import moment from 'moment';
 

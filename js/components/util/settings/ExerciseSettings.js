@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import TRC from 'toto-react-components';
-import SingleSettings from './util/settings/SingleSettings';
-import DropsetSettings from './util/settings/DropsetSettings';
-import StripingSettings from './util/settings/StripingSettings';
-import HourglassSettings from './util/settings/HourglassSettings';
-import TrainingAPI from '../services/TrainingAPI';
-import * as config from '../Config';
+import SingleSettings from './SingleSettings';
+import DropsetSettings from './DropsetSettings';
+import StripingSettings from './StripingSettings';
+import HourglassSettings from './HourglassSettings';
+import TrainingAPI from '../../../services/TrainingAPI';
+import * as config from '../../../Config';
 import Swiper from 'react-native-swiper';
 
 export default class ExerciseSettings extends Component {
@@ -103,8 +103,8 @@ export default class ExerciseSettings extends Component {
           {settings}
         </View>
         <View style={styles.buttonsContainer}>
-          <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.saveExercise} />
-          <TRC.TotoIconButton image={require('../../img/cross.png')} onPress={this.props.onCancel} />
+          <TRC.TotoIconButton image={require('../../../../img/tick.png')} onPress={this.saveExercise} />
+          <TRC.TotoIconButton image={require('../../../../img/cross.png')} onPress={this.props.onCancel} />
         </View>
       </View>
     )

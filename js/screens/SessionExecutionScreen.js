@@ -6,6 +6,7 @@ import TrainingAPI from '../services/TrainingAPI';
 import GymExercisesList from '../components/GymExercisesList';
 import ExerciseSettings from '../components/util/settings/ExerciseSettings';
 import ExerciseMood from '../components/ExerciseMood';
+import TodayBubble from '../components/TodayBubble';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
@@ -292,21 +293,6 @@ export default class SessionExecutionScreen extends Component<Props> {
    */
   render() {
 
-    // Current calendar date
-    let todayDayOfWeek = moment().format('dddd');
-    let todayDay = moment().format('DD');
-    let todayMonth = moment().format('MMMM');
-    let todayYear = moment().format('YYYY');
-
-    let today = (
-      <View style={styles.todayContainer}>
-        <Text style={styles.todayDayOfWeek}>{todayDayOfWeek}</Text>
-        <Text style={styles.todayDay}>{todayDay}</Text>
-        <Text style={styles.todayMonth}>{todayMonth}</Text>
-        <Text style={styles.todayYear}>{todayYear}</Text>
-      </View>
-    )
-
     // Name of the workouts
     let workouts;
 
@@ -335,7 +321,7 @@ export default class SessionExecutionScreen extends Component<Props> {
       <View style={styles.container}>
 
         <View style={styles.header}>
-          {today}
+          <TodayBubble />
           <View style={{marginLeft: 12}} >
             <TRC.TotoIconButton image={require('../../img/tick.png')} />
           </View>
@@ -380,34 +366,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     paddingHorizontal: 12,
-  },
-  todayContainer: {
-    borderWidth: 4,
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  todayDayOfWeek: {
-    textTransform: 'uppercase',
-    fontSize: 14,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-  },
-  todayDay: {
-    fontSize: 30,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-  },
-  todayMonth: {
-    fontSize: 12,
-    textTransform: 'uppercase',
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-  },
-  todayYear: {
-    fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-    opacity: 0.9,
   },
   workoutsTitleContainer: {
     flex: 1,

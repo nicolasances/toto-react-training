@@ -4,6 +4,7 @@ import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import TotoFlatList from '../components/TotoFlatList';
+import TodayBubble from '../components/TodayBubble';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
@@ -177,21 +178,6 @@ export default class SessionStartScreen extends Component<Props> {
    */
   render() {
 
-    // Current calendar date
-    let todayDayOfWeek = moment().format('dddd');
-    let todayDay = moment().format('DD');
-    let todayMonth = moment().format('MMMM');
-    let todayYear = moment().format('YYYY');
-
-    let today = (
-      <View style={styles.todayContainer}>
-        <Text style={styles.todayDayOfWeek}>{todayDayOfWeek}</Text>
-        <Text style={styles.todayDay}>{todayDay}</Text>
-        <Text style={styles.todayMonth}>{todayMonth}</Text>
-        <Text style={styles.todayYear}>{todayYear}</Text>
-      </View>
-    )
-
     // In case there are no muscles selected, show a text message
     // "Add some workout!"
     let emptyMessage;
@@ -207,18 +193,9 @@ export default class SessionStartScreen extends Component<Props> {
     // Button to start the session
     let startButton;
 
-    if (this.state.muscles.length > 0) {
-
-      startButton = (
-        <TRC.TotoIconButton
-              image={require('../../img/tick.png')}
-              label='Start the session!'
-              size='xl'
-              onPress={this.onStart}
-              />
-      )
-
-    }
+    if (this.state.muscles.length > 0) startButton = (
+        <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.onStart} />
+    )
 
     // Affected Muscles
     let muscles;
@@ -253,13 +230,13 @@ export default class SessionStartScreen extends Component<Props> {
       <View style={styles.container}>
 
         <View style={styles.sessionContainer}>
-          {today}
+          <TodayBubble />
           <View style={styles.actionsContainer}>
             {emptyMessage}
             {startButton}
           </View>
+          {muscles}
         </View>
-        {muscles}
 
         <TotoFlatList
             data={this.state.plans}
@@ -286,36 +263,9 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     marginBottom: 24,
   },
-  todayContainer: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-    alignItems: 'center'
-  },
-  todayDayOfWeek: {
-    textTransform: 'uppercase',
-    fontSize: 14,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-  },
-  todayDay: {
-    fontSize: 30,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-  },
-  todayMonth: {
-    fontSize: 12,
-    textTransform: 'uppercase',
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-  },
-  todayYear: {
-    fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-    opacity: 0.9,
-  },
   actionsContainer: {
-    flex: 1,
     justifyContent: 'center',
+    alignItems: 'flex-start',
     paddingHorizontal: 12,
   },
   emptyMessage: {
@@ -331,9 +281,9 @@ const styles = StyleSheet.create({
   },
   musclesIconsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     marginHorizontal: 12,
-    marginBottom: 12
   },
   muscleIconContainer: {
     flexDirection: 'row',
@@ -341,17 +291,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
     borderWidth: 2,
-    borderRadius: 35,
-    width: 70,
-    height: 70,
+    borderRadius: 20,
+    width: 40,
+    height: 40,
     marginRight: 12,
   },
   muscleFirstLetter: {
     color: TRC.TotoTheme.theme.COLOR_TEXT,
-    fontSize: 30,
+    fontSize: 20,
   },
   muscleSecondLetter: {
     color: TRC.TotoTheme.theme.COLOR_TEXT,
-    fontSize: 30,
+    fontSize: 20,
   }
 });

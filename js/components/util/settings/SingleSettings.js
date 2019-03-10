@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import TRC from 'toto-react-components';
-import Measurement from './Measurement';
-import WeightRange from './WeightRange';
+import Measurement from '../Measurement';
+import WeightRange from '../WeightRange';
 
 /**
  * This class represents the settings of an exercise of type "Single".

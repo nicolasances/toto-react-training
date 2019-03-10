@@ -21,7 +21,7 @@
     "react-native-google-signin": "^1.0.0-rc6",
     "react-native-swiper": "^1.5.13",
     "react-navigation": "^2.18.0",
-    "toto-react-components": "1.18.2"
+    "toto-react-components": "1.18.3"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

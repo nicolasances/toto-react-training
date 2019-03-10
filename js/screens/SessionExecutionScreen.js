@@ -4,6 +4,8 @@ import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import GymExercisesList from '../components/GymExercisesList';
+import ExerciseSettings from '../components/ExerciseSettings';
+import ExerciseMood from '../components/ExerciseMood';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
@@ -47,15 +49,18 @@ export default class SessionExecutionScreen extends Component<Props> {
       session: null,
       workouts: [],
       moodModalVisible: false,
-      selectedExercise: null
+      selectedExercise: null,
+      exModalVisible: false
     }
 
     // Bindings
     this.loadWorkouts = this.loadWorkouts.bind(this);
     this.selectMood = this.selectMood.bind(this);
-    this.changeMood = this.changeMood.bind(this);
+    this.selectExercise = this.selectExercise.bind(this);
+    this.deleteSession = this.deleteSession.bind(this);
     this.onExerciseCompleted = this.onExerciseCompleted.bind(this);
     this.onExerciseMoodChanged = this.onExerciseMoodChanged.bind(this);
+    this.onExerciseSettingsChanged = this.onExerciseSettingsChanged.bind(this);
 
   }
 
@@ -66,6 +71,7 @@ export default class SessionExecutionScreen extends Component<Props> {
     // Add event listeners
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseSettingsChanged, this.onExerciseSettingsChanged)
 
     // Load data
     this.loadSession();
@@ -76,6 +82,7 @@ export default class SessionExecutionScreen extends Component<Props> {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseSettingsChanged, this.onExerciseSettingsChanged)
   }
 
   /**
@@ -102,7 +109,7 @@ export default class SessionExecutionScreen extends Component<Props> {
 
     new TrainingAPI().getSessionExercises(this.props.navigation.getParam('sessionId')).then((data) => {
 
-      this.setState({exercises: data.exercises});
+      this.setState({exercises: []}, () => {this.setState({exercises: data.exercises})});
 
     });
 
@@ -212,9 +219,18 @@ export default class SessionExecutionScreen extends Component<Props> {
   }
 
   /**
-   * Reacts to the completion of an exercise
+   * Reacts to the change of an exercise's mood
    */
   onExerciseMoodChanged(event) {
+
+    this.loadExercises();
+
+  }
+
+  /**
+   * Reacts to the change of an exercise's settings
+   */
+  onExerciseSettingsChanged(event) {
 
     this.loadExercises();
 
@@ -231,20 +247,43 @@ export default class SessionExecutionScreen extends Component<Props> {
   }
 
   /**
-   * New mood to set
+   * Reacts to the selection of an exercise
    */
-  changeMood(newMood) {
+  selectExercise(item) {
 
-    // Hide the modal
-    this.setState({moodModalVisible: false});
+    // Show the modal and set the selected exercise
+    this.setState({exModalVisible: true, selectedExercise: item.item});
 
-    if (this.state.selectedExercise == null) return;
+  }
 
-    // CAll the API
-    new TrainingAPI().setExerciseMood(this.state.session.id, this.state.selectedExercise.id, newMood).then((data) => {
+  /**
+   * Update the exercise and close the dialog
+   */
+  updateExercise() {
 
-      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.exerciseMoodChanged, context: {exerciseId: this.state.selectedExercise.id}});
-    })
+    // Update the exercise
+    // Call the training api
+
+    // Close the modal
+    this.setState({exModalVisible: false});
+
+  }
+
+  /**
+   * Deletes the current session
+   */
+  deleteSession() {
+
+    // Delete the session
+    new TrainingAPI().deleteSession(this.state.session.id).then((data) => {
+
+      // Throw an event
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.sessionDeleted, context: {sessionId: this.state.sessionId}});
+
+    });
+
+    // Go back
+    this.props.navigation.goBack();
 
   }
 
@@ -302,7 +341,7 @@ export default class SessionExecutionScreen extends Component<Props> {
             <TRC.TotoIconButton image={require('../../img/tick.png')} />
           </View>
           <View style={{marginLeft: 6}} >
-            <TRC.TotoIconButton image={require('../../img/trash.png')} size='s' />
+            <TRC.TotoIconButton image={require('../../img/trash.png')} size='s' onPress={this.deleteSession} />
           </View>
           {workouts}
         </View>
@@ -312,28 +351,15 @@ export default class SessionExecutionScreen extends Component<Props> {
             dataExtractor={this.exerciseDataExtractor}
             onAvatarPress={this.onExerciseAvatarPress}
             onMoodPress={this.selectMood}
+            onExercisePress={this.selectExercise}
             />
 
         <Modal  animationType="slide" transparent={false} visible={this.state.moodModalVisible}>
-          <View style={styles.moodModal}>
-            <View style={styles.moodModalTitleContainer}>
-              <Text style={styles.moodModalTitle}>How do you feel after the exercise?</Text>
-            </View>
-            <View style={styles.moodModalIconsContainer}>
-              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('ok')}}>
-                <Image source={require('../../img/moods/ok.png')} style={styles.moodImage} />
-                <Text style={styles.moodCaption}>Fine</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('tired')}}>
-                <Image source={require('../../img/moods/tired.png')} style={styles.moodImage} />
-                <Text style={styles.moodCaption}>Tired</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.moodContainer} onPress={() => {this.changeMood('dead')}}>
-                <Image source={require('../../img/moods/dead.png')} style={styles.moodImage} />
-                <Text style={styles.moodCaption}>Dead</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <ExerciseMood exercise={this.state.selectedExercise} whenFinished={() => {this.setState({moodModalVisible: false})}} />
+        </Modal>
+
+        <Modal animationType="slide" transparent={false} visible={this.state.exModalVisible}>
+          <ExerciseSettings exercise={this.state.selectedExercise} onSaved={() => {this.setState({exModalVisible: false})}} onCancel={() => {this.setState({exModalVisible: false})}} />
         </Modal>
 
       </View>
@@ -395,39 +421,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginVertical: 3,
-  },
-  moodModal: {
-    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  moodModalTitleContainer: {
-    marginBottom: 48,
-    marginTop: 64,
-  },
-  moodModalTitle: {
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-    fontSize: 20
-  },
-  moodModalIconsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  moodContainer: {
-    marginHorizontal: 12,
-    alignItems: 'center'
-  },
-  moodImage: {
-    width: 48,
-    height: 48,
-    tintColor: TRC.TotoTheme.theme.COLOR_TEXT,
-  },
-  moodCaption: {
-    fontSize: 12,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-    marginTop: 9
   },
 });

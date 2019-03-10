@@ -67,6 +67,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Deletes the specified session
+   */
+  deleteSession(id) {
+
+    return new TotoAPI().fetch('/training/session/sessions/' + id, {method: 'DELETE'})
+          .then((response) => response.json());
+
+  }
+
+  /**
    * Retrieves the exercises of the session
    */
   getSessionExercises(sessionId) {
@@ -126,6 +136,21 @@ export default class TrainingAPI {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({mood: mood})
+    }).then((response => response.json()));
+
+  }
+
+  /**
+   * Changes the exercise settings.
+   * Note that the settings are going to be provided as is as the body of the request
+   */
+  setExerciseSettings(sessionId, exerciseId, settings) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/exercises/' + exerciseId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(settings)
     }).then((response => response.json()));
 
   }

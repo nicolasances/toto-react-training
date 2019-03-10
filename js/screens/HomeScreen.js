@@ -36,7 +36,7 @@ export default class HomeScreen extends Component<Props> {
     }
 
     // Bindings
-    // this.onGrocerySelected = this.onGrocerySelected.bind(this);
+    // this.onSessionDeleted = this.onSessionDeleted.bind(this);
 
   }
 
@@ -45,7 +45,7 @@ export default class HomeScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
 
     // Load data
     this.loadTodaySessions();
@@ -53,7 +53,7 @@ export default class HomeScreen extends Component<Props> {
 
   componentWillUnmount() {
     // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
   }
 
   /**

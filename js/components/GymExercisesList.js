@@ -48,7 +48,7 @@ export default class GymExercisesList extends Component {
     return (
       <FlatList
         data={this.props.data}
-        renderItem={(item) => <Item item={item} avatarImageLoader={this.props.avatarImageLoader} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress} onAvatarPress={this.props.onAvatarPress} onMoodPress={this.props.onMoodPress}/>}
+        renderItem={(item) => <Item item={item} avatarImageLoader={this.props.avatarImageLoader} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress} onAvatarPress={this.props.onAvatarPress} onMoodPress={this.props.onMoodPress} onExercisePress={this.props.onExercisePress}/>}
         keyExtractor={(item, index) => {return 'toto-flat-list-' + index}}
         />
     )
@@ -147,9 +147,9 @@ class Item extends Component {
     let item2;
     if (data.title2 != null) item2 = (
 
-      <View style={styles.item2} onPress={() => {if (this.props.onItemPress) this.props.onItemPress(this.props.item)}}>
+      <View style={styles.item2}>
 
-        <TouchableOpacity style={styles.textContainer}>
+        <TouchableOpacity style={styles.textContainer} onPress={() => {if (this.props.onExercisePress) this.props.onExercisePress(this.props.item)}} >
           <Text style={textColor}>{data.title2}</Text>
           <Text style={[subtitleColor, {fontSize: 12}]}>{data.subtitle2}</Text>
         </TouchableOpacity>
@@ -159,11 +159,11 @@ class Item extends Component {
 
     return (
       <View>
-        <View style={styles.item} onPress={() => {if (this.props.onItemPress) this.props.onItemPress(this.props.item)}}>
+        <View style={styles.item}>
 
           {avatarContainer}
 
-          <TouchableOpacity style={styles.textContainer}>
+          <TouchableOpacity style={styles.textContainer} onPress={() => {if (this.props.onExercisePress) this.props.onExercisePress(this.props.item)}}>
             <Text style={textColor}>{data.title}</Text>
             <Text style={[subtitleColor, {fontSize: 12}]}>{data.subtitle1}</Text>
           </TouchableOpacity>

@@ -19,6 +19,8 @@ class HomeHeader extends Component {
     // Bindings
     this.findOngoingSession = this.findOngoingSession.bind(this);
     this.goToSessionExecution = this.goToSessionExecution.bind(this);
+    this.onSessionDeleted = this.onSessionDeleted.bind(this);
+    this.onSessionCreated = this.onSessionCreated.bind(this);
   }
 
   /**
@@ -28,6 +30,20 @@ class HomeHeader extends Component {
 
     this.loadTodaySessions();
 
+    // Bind events
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+
+  }
+
+  /**
+   * When the component will un mount
+   */
+  componentWillUnmount() {
+
+    // Unregister
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
   }
 
   /**
@@ -74,6 +90,27 @@ class HomeHeader extends Component {
     return null;
 
   }
+
+  /**
+   * When a session has been deleted
+   */
+  onSessionDeleted(event) {
+
+    // Reload the data
+    this.loadTodaySessions();
+
+  }
+
+  /**
+   * When a session has been created
+   */
+  onSessionCreated(event) {
+
+    // Reload the data
+    this.loadTodaySessions();
+
+  }
+
 
   render() {
 

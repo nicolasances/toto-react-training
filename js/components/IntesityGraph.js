@@ -16,7 +16,8 @@ export default class IntesityGraph extends Component {
     };
 
     // Binding functions to this
-    this.xLabel = this.xLabel.bind(this);
+    this.onSessionDeleted = this.onSessionDeleted.bind(this);
+    this.onSessionCreated = this.onSessionCreated.bind(this);
   }
 
   /**
@@ -25,6 +26,20 @@ export default class IntesityGraph extends Component {
   componentDidMount() {
 
     this.loadIntensityData();
+
+    // Register to events
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+  }
+
+  /**
+   * When the component will un mount
+   */
+  componentWillUnmount() {
+
+    // Unregister
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
   }
 
   /**
@@ -41,37 +56,22 @@ export default class IntesityGraph extends Component {
   }
 
   /**
-   * Data for the chart
+   * When a session has been deleted
    */
-  makeData(days) {
+  onSessionDeleted(event) {
 
-    if (days == null) return [];
-
-    let data = [];
-
-    for (var i = 0; i < days.length; i++) {
-
-      data.push({
-        x: i,
-        y: days[i].muscles ? days[i].muscles.length : 0
-      });
-    }
-
-    return data;
+    // Reload the data
+    this.loadIntensityData();
 
   }
 
   /**
-   * Generate the x label for the provided datum
+   * When a session has been created
    */
-  xLabel(xValue) {
+  onSessionCreated(event) {
 
-    // xValue is the index of the array this.state.days
-    if (this.state.days == null || this.state.days.length <= xValue) return '';
-
-    let day = this.state.days[xValue];
-
-    return moment(day.date, 'YYYYMMDD').format('dd');
+    // Reload the data
+    this.loadIntensityData();
 
   }
 
@@ -79,9 +79,6 @@ export default class IntesityGraph extends Component {
    * Render
    */
   render() {
-
-    // Create the data for the chart
-    let data = this.makeData(this.state.days);
 
     return (
       <View style={styles.container}>

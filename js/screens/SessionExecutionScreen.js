@@ -175,16 +175,15 @@ export default class SessionExecutionScreen extends Component<Props> {
     else if (ex.type == 'striping') {
       s1 = ex.sets;
       r1 = ex.reps1; r2 = ex.reps2; r3 = ex.reps3;
-      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.reps3;
+      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
       title1 = ex.name;
-      subtitle1 = s1 + ' X (7 + 7 + 7)' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg', + '  ' + w3 + ' Kg';
+      subtitle1 = s1 + ' X (7 + 7 + 7)' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
       avatar.value = avatarStriping;
     }
     else if (ex.type == 'hourglass') {
-      s1 = ex.sets;
-      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.reps3;
+      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
       title1 = ex.name;
-      subtitle1 = s1 + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg', + '  ' + w3 + ' Kg';
+      subtitle1 = w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
       avatar.value = avatarHourglass;
     }
 

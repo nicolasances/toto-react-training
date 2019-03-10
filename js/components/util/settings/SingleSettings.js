@@ -84,7 +84,7 @@ export default class SingleSettings extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Exercise settings</Text>
+          <Text style={styles.title}>Single exercise settings</Text>
           <Text style={styles.subtitle}>{this.state.exercise.name}</Text>
         </View>
         <View style={styles.measurementContainer}>

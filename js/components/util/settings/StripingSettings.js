@@ -11,7 +11,7 @@ import WeightRange from '../WeightRange';
  * - exercise       : (mandatory) the exercise of type 'dropset' for which the properties should be managed
  *
  */
-export default class DropsetSettings extends Component {
+export default class StripingSettings extends Component {
 
   /**
    * Constructor
@@ -27,17 +27,20 @@ export default class DropsetSettings extends Component {
     // Set the min and max weight
     let weightRange1 = new WeightRange(props.exercise.weight1);
     let weightRange2 = new WeightRange(props.exercise.weight2);
+    let weightRange3 = new WeightRange(props.exercise.weight3);
 
     this.minWeight1 = weightRange1.minWeight();
     this.maxWeight1 = weightRange1.maxWeight();
     this.minWeight2 = weightRange2.minWeight();
     this.maxWeight2 = weightRange2.maxWeight();
+    this.minWeight3 = weightRange3.minWeight();
+    this.maxWeight3 = weightRange3.maxWeight();
 
     // Bindings
     this.onChangeSets = this.onChangeSets.bind(this);
-    this.onChangeReps = this.onChangeReps.bind(this);
     this.onChangeWeight1 = this.onChangeWeight1.bind(this);
     this.onChangeWeight2 = this.onChangeWeight2.bind(this);
+    this.onChangeWeight3 = this.onChangeWeight3.bind(this);
 
   }
 
@@ -49,20 +52,6 @@ export default class DropsetSettings extends Component {
     let ex = this.state.exercise;
 
     ex.sets = value;
-
-    this.setState({exercise: ex});
-
-  }
-
-  /**
-   * When the reps are changed
-   */
-  onChangeReps(value) {
-
-    let ex = this.state.exercise;
-
-    ex.reps1 = value;
-    ex.reps2 = value;
 
     this.setState({exercise: ex});
 
@@ -95,6 +84,19 @@ export default class DropsetSettings extends Component {
   }
 
   /**
+   * When the weight is changed
+   */
+  onChangeWeight3(value) {
+
+    let ex = this.state.exercise;
+
+    ex.weight3 = value;
+
+    this.setState({exercise: ex});
+
+  }
+
+  /**
    * Render method
    */
   render() {
@@ -102,20 +104,20 @@ export default class DropsetSettings extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Dropset exercise settings</Text>
+          <Text style={styles.title}>Striping exercise settings</Text>
           <Text style={styles.subtitle}>{this.state.exercise.name}</Text>
         </View>
         <View style={styles.measurementContainer}>
           <Measurement title="Sets" value={this.state.exercise.sets} minValue={1} maxValue={10} increment={1} onValueChange={this.onChangeSets} />
         </View>
         <View style={styles.measurementContainer}>
-          <Measurement title="Reps" value={this.state.exercise.reps1} minValue={1} maxValue={20} increment={1} onValueChange={this.onChangeReps} />
-        </View>
-        <View style={styles.measurementContainer}>
           <Measurement title="Upper weight" value={this.state.exercise.weight1} minValue={this.minWeight1} maxValue={this.maxWeight1} increment={0.25} onValueChange={this.onChangeWeight1} />
         </View>
         <View style={styles.measurementContainer}>
-          <Measurement title="Lower weight" value={this.state.exercise.weight2} minValue={this.minWeight2} maxValue={this.maxWeight2} increment={0.25} onValueChange={this.onChangeWeight2} />
+          <Measurement title="Medium weight" value={this.state.exercise.weight2} minValue={this.minWeight2} maxValue={this.maxWeight2} increment={0.25} onValueChange={this.onChangeWeight2} />
+        </View>
+        <View style={styles.measurementContainer}>
+          <Measurement title="Lower weight" value={this.state.exercise.weight3} minValue={this.minWeight3} maxValue={this.maxWeight3} increment={0.25} onValueChange={this.onChangeWeight3} />
         </View>
       </View>
     )

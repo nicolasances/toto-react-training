@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation';
 import TRC from 'toto-react-components';
 import SingleSettings from './util/settings/SingleSettings';
 import DropsetSettings from './util/settings/DropsetSettings';
+import StripingSettings from './util/settings/StripingSettings';
 import TrainingAPI from '../services/TrainingAPI';
 import * as config from '../Config';
 import Swiper from 'react-native-swiper';
@@ -49,6 +50,16 @@ export default class ExerciseSettings extends Component {
       weight1: this.state.exercise.weight1,
       weight2: this.state.exercise.weight2
     }
+    // Striping
+    else if (this.state.exercise.type == 'striping') settings = {
+      sets: this.state.exercise.sets,
+      reps1: 7,
+      reps2: 7,
+      reps3: 7,
+      weight1: this.state.exercise.weight1,
+      weight2: this.state.exercise.weight2,
+      weight3: this.state.exercise.weight3
+    }
 
     // Save
     new TrainingAPI().setExerciseSettings(this.state.exercise.sessionId, this.state.exercise.id, settings).then((data) => {
@@ -72,6 +83,7 @@ export default class ExerciseSettings extends Component {
     if (this.state.exercise.type == 'single') settings = (<SingleSettings exercise={this.state.exercise} />)
     else if (this.state.exercise.type == 'superset') settings = (<Swiper dotStyle={styles.swiperDotStyle} activeDotStyle={styles.swiperActiveDotStyle}><SingleSettings exercise={this.state.exercise.ex1} /><SingleSettings exercise={this.state.exercise.ex2} /></Swiper>)
     else if (this.state.exercise.type == 'dropset') settings = (<DropsetSettings exercise={this.state.exercise} />)
+    else if (this.state.exercise.type == 'striping') settings = (<StripingSettings exercise={this.state.exercise} />)
 
     return (
       <View style={styles.container}>

@@ -142,7 +142,7 @@ class Item extends Component {
         // In case of dayMonthYear, add the end year to the side of the boxes
         if (data.dateRange.type == 'dayMonthYear') {
 
-          let yearLabel = moment(data.dateRange.end, 'YYYYMMDD').format('YYYY');
+          let yearLabel = moment(data.dateRange.end, 'YYYYMMDD').format('\'YY');
 
           year = (
             <Text style={styles.yearTextTruncated}>{yearLabel}</Text>
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     width: 20,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
+    opacity: 0.9,
     marginLeft: 6,
   },
 })

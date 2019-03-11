@@ -103,6 +103,20 @@ export default class TrainingAPI {
   }
 
   /**
+   * Completes the training session
+   */
+  completeSession(sessionId) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({completed: true})
+    }).then((response => response.json()));
+
+  }
+
+  /**
    * Gets the data to display the intensity chart
    */
   getIntensityData(maxDays) {

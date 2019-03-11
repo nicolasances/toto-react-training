@@ -21,6 +21,7 @@ class HomeHeader extends Component {
     this.goToSessionExecution = this.goToSessionExecution.bind(this);
     this.onSessionDeleted = this.onSessionDeleted.bind(this);
     this.onSessionCreated = this.onSessionCreated.bind(this);
+    this.onSessionCompleted = this.onSessionCompleted.bind(this);
   }
 
   /**
@@ -33,6 +34,7 @@ class HomeHeader extends Component {
     // Bind events
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
 
   }
 
@@ -44,6 +46,7 @@ class HomeHeader extends Component {
     // Unregister
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
   }
 
   /**
@@ -53,7 +56,18 @@ class HomeHeader extends Component {
 
     new TrainingAPI().getTodaySessions().then((data) => {
 
-      this.setState({sessions: data.sessions, sessionsLoaded: true});
+      // Calculate training time
+      let trainingTime = 0;
+
+      for (var i = 0; i < data.sessions.length; i++) {
+
+        let session = data.sessions[i];
+
+        if (session.timeInMinutes) trainingTime += session.timeInMinutes;
+
+      }
+
+      this.setState({sessions: data.sessions, sessionsLoaded: true, trainingTime: trainingTime});
 
     })
 
@@ -105,6 +119,16 @@ class HomeHeader extends Component {
    * When a session has been created
    */
   onSessionCreated(event) {
+
+    // Reload the data
+    this.loadTodaySessions();
+
+  }
+
+  /**
+   * When a session has been created
+   */
+  onSessionCompleted(event) {
 
     // Reload the data
     this.loadTodaySessions();

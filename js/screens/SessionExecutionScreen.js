@@ -59,6 +59,7 @@ export default class SessionExecutionScreen extends Component<Props> {
     this.selectMood = this.selectMood.bind(this);
     this.selectExercise = this.selectExercise.bind(this);
     this.deleteSession = this.deleteSession.bind(this);
+    this.completeSession = this.completeSession.bind(this);
     this.onExerciseCompleted = this.onExerciseCompleted.bind(this);
     this.onExerciseMoodChanged = this.onExerciseMoodChanged.bind(this);
     this.onExerciseSettingsChanged = this.onExerciseSettingsChanged.bind(this);
@@ -287,6 +288,25 @@ export default class SessionExecutionScreen extends Component<Props> {
 
   }
 
+  /**
+   * Completes the session
+   */
+  completeSession() {
+
+    // call the api
+    new TrainingAPI().completeSession(this.state.session.id).then((data) => {
+
+      // Throw an event
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.sessionCompleted, context: {sessionId: this.state.session.id}});
+
+    });
+
+    // Go back
+    // TODO : go to the "fatigue" setting or actually request the fatigue contextually to the session closing
+    this.props.navigation.goBack();
+
+  }
+
 
   /**
    * Renders the home screen
@@ -323,7 +343,7 @@ export default class SessionExecutionScreen extends Component<Props> {
         <View style={styles.header}>
           <TodayBubble />
           <View style={{marginLeft: 12}} >
-            <TRC.TotoIconButton image={require('../../img/tick.png')} />
+            <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.completeSession} />
           </View>
           <View style={{marginLeft: 6}} >
             <TRC.TotoIconButton image={require('../../img/trash.png')} size='s' onPress={this.deleteSession} />

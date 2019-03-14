@@ -94,7 +94,7 @@ export default class SessionExecutionScreen extends Component<Props> {
 
     new TrainingAPI().getSession(this.props.navigation.getParam('sessionId')).then((data) => {
 
-      this.setState({session : data}, () => {
+      this.setState({session : data, date: data.date}, () => {
 
         this.loadWorkouts();
 
@@ -348,14 +348,22 @@ export default class SessionExecutionScreen extends Component<Props> {
       )
     }
 
+    // Complete session button
+    // If the session is already completed, don't show the button
+    let completeButton;
+
+    if (this.state.session != null && !this.state.session.completed) completeButton = (
+      <View style={{marginLeft: 12}} >
+        <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.completeSession} />
+      </View>
+    )
+
     return (
       <View style={styles.container}>
 
         <View style={styles.header}>
-          <TodayBubble />
-          <View style={{marginLeft: 12}} >
-            <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.completeSession} />
-          </View>
+          <TodayBubble date={this.state.date}/>
+          {completeButton}
           <View style={{marginLeft: 6}} >
             <TRC.TotoIconButton image={require('../../img/trash.png')} onPress={this.deleteSession} />
           </View>

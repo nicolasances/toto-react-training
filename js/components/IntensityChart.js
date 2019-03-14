@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Animated, Easing, View, Text, ART, Dimensions, StyleSheet, Image} from 'react-native';
+import {Animated, Easing, View, Text, ART, Dimensions, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import * as scale from 'd3-scale';
 import * as shape from 'd3-shape';
 import * as array from 'd3-array';
 import * as path from 'd3-path';
 import TRC from 'toto-react-components';
 import moment from 'moment';
+import { withNavigation } from 'react-navigation';
 
 const {Group, Shape, Surface} = ART;
 const d3 = {scale, shape, array, path};
@@ -167,13 +168,14 @@ class IntensityChart extends Component {
 
         let muscleKey = 'musc' + m;
 
-        let muscleText = muscles[m].substring(0, 1).toUpperCase() + muscles[m].substring(1, 2);
+        let muscleText = muscles[m].muscle.substring(0, 1).toUpperCase() + muscles[m].muscle.substring(1, 2);
+        let sessionId = muscles[m].sessionId;
 
         // Create the circle
         let circle = (
-          <View key={muscleKey} style={styles.muscleCircle}>
+          <TouchableOpacity key={muscleKey} style={styles.muscleCircle} onPress={() => {this.props.navigation.navigate('SessionExecutionScreen', {sessionId: sessionId})}}>
             <Text style={styles.muscleText}>{muscleText}</Text>
-          </View>
+          </TouchableOpacity>
         )
 
         circles.push(circle);
@@ -277,7 +279,7 @@ class IntensityChart extends Component {
 /**
  * Exports the animated component
  */
-export default Animated.createAnimatedComponent(TotoBarChart);
+export default withNavigation(Animated.createAnimatedComponent(IntensityChart));
 
 /**
  * Stylesheets

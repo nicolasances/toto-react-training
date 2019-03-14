@@ -12,11 +12,13 @@ export default class TodayBubble extends Component {
 
   render() {
 
+    let date = this.props.date == null ? moment() : moment(this.props.date, 'YYYYMMDD');
+
     // Current calendar date
-    let todayDayOfWeek = moment().format('dddd');
-    let todayDay = moment().format('DD');
-    let todayMonth = moment().format('MMM');
-    let todayYear = moment().format('YYYY');
+    let todayDayOfWeek = date.format('dddd');
+    let todayDay = date.format('DD');
+    let todayMonth = date.format('MMM');
+    let todayYear = date.format('YYYY');
 
     return (
       <View style={styles.todayContainer}>

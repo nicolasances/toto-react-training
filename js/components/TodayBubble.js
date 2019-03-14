@@ -15,12 +15,11 @@ export default class TodayBubble extends Component {
     // Current calendar date
     let todayDayOfWeek = moment().format('dddd');
     let todayDay = moment().format('DD');
-    let todayMonth = moment().format('MMMM');
+    let todayMonth = moment().format('MMM');
     let todayYear = moment().format('YYYY');
 
     return (
       <View style={styles.todayContainer}>
-        <Text style={styles.todayDayOfWeek}>{todayDayOfWeek}</Text>
         <Text style={styles.todayDay}>{todayDay}</Text>
         <Text style={styles.todayMonth}>{todayMonth}</Text>
         <Text style={styles.todayYear}>{todayYear}</Text>
@@ -46,16 +45,16 @@ const styles = StyleSheet.create({
     color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayDay: {
-    fontSize: 20,
+    fontSize: 30,
     color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayMonth: {
-    fontSize: 8,
+    fontSize: 14,
     textTransform: 'uppercase',
     color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
   },
   todayYear: {
-    fontSize: 8,
+    fontSize: 10,
     color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
     opacity: 0.9,
   },

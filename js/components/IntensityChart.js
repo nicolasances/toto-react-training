@@ -14,7 +14,7 @@ const window = Dimensions.get('window');
 /**
  * Creates a the chart displaying what has been done every day at the gym
  */
-class TotoBarChart extends Component {
+class IntensityChart extends Component {
 
   /**
    * Constructor

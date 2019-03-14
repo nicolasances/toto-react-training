@@ -204,10 +204,12 @@ export default class SessionExecutionScreen extends Component<Props> {
    */
   onExerciseAvatarPress(item) {
 
-    new TrainingAPI().completeExercise(item.item.sessionId, item.item.id).then((data) => {
+    // Update the view
+    TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.exerciseCompleted, context: {sessionId: item.item.sessionId, exerciseId: item.item.id}})
 
-      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.exerciseCompleted, context: {sessionId: item.item.sessionId, exerciseId: item.item.id}})
-    });
+    // Call the API
+    new TrainingAPI().completeExercise(item.item.sessionId, item.item.id).then(() => {}, this.loadExercises);
+
   }
 
   /**
@@ -215,7 +217,16 @@ export default class SessionExecutionScreen extends Component<Props> {
    */
   onExerciseCompleted(event) {
 
-    this.loadExercises();
+    for (var i = 0; i < this.state.exercises.length; i++) {
+
+      if (this.state.exercises[i].id == event.context.exerciseId) {
+
+        let exs = this.state.exercises;
+        exs[i].completed = true;
+
+        this.setState({exercises: []}, () => {this.setState({exercises: exs})});
+      }
+    }
 
   }
 
@@ -346,7 +357,7 @@ export default class SessionExecutionScreen extends Component<Props> {
             <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.completeSession} />
           </View>
           <View style={{marginLeft: 6}} >
-            <TRC.TotoIconButton image={require('../../img/trash.png')} size='s' onPress={this.deleteSession} />
+            <TRC.TotoIconButton image={require('../../img/trash.png')} onPress={this.deleteSession} />
           </View>
           {workouts}
         </View>

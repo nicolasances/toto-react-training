@@ -40,20 +40,20 @@ const styles = StyleSheet.create({
   todayDayOfWeek: {
     textTransform: 'uppercase',
     fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   todayDay: {
     fontSize: 30,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   todayMonth: {
     fontSize: 14,
     textTransform: 'uppercase',
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   todayYear: {
     fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
     opacity: 0.9,
   },
 })

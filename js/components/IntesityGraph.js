@@ -18,6 +18,7 @@ export default class IntesityGraph extends Component {
     // Binding functions to this
     this.onSessionDeleted = this.onSessionDeleted.bind(this);
     this.onSessionCreated = this.onSessionCreated.bind(this);
+    this.onMusclePainUpdated = this.onMusclePainUpdated.bind(this);
   }
 
   /**
@@ -30,6 +31,7 @@ export default class IntesityGraph extends Component {
     // Register to events
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated);
   }
 
   /**
@@ -40,6 +42,7 @@ export default class IntesityGraph extends Component {
     // Unregister
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated);
   }
 
   /**
@@ -49,7 +52,7 @@ export default class IntesityGraph extends Component {
 
     new TrainingAPI().getIntensityData(8).then((data) => {
 
-      this.setState({days: data.days});
+      this.setState({days: []}, () => {this.setState({days: data.days})});
 
     })
 
@@ -59,7 +62,6 @@ export default class IntesityGraph extends Component {
    * When a session has been deleted
    */
   onSessionDeleted(event) {
-
     // Reload the data
     this.loadIntensityData();
 
@@ -69,10 +71,17 @@ export default class IntesityGraph extends Component {
    * When a session has been created
    */
   onSessionCreated(event) {
-
     // Reload the data
     this.loadIntensityData();
 
+  }
+
+  /**
+  * When a muscle pain level has been updated
+  */
+  onMusclePainUpdated(event) {
+    // Reload the data
+    this.loadIntensityData();
   }
 
   /**

@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, TouchableOpacity, Image, Modal} from 'react-nati
 import TrainingAPI from '../services/TrainingAPI';
 import TRC from 'toto-react-components';
 import MusclePainSetting from './MusclePainSetting';
+import * as config from '../Config';
 
 var imgDead = require('../../img/pain/dead.png');
 var imgHeavy = require('../../img/pain/heavy.png');
@@ -29,9 +30,25 @@ export default class SessionMusclesPain extends Component {
       painModalVisible: false,
     }
 
+    // Bindings
+    this.onMusclePainUpdated = this.onMusclePainUpdated.bind(this);
+
     // Loading stuff
     this.loadSession();
     this.loadSessionMuscles();
+  }
+
+  /**
+   * When the component mount
+   */
+  componentDidMount() {
+    // Add event listeners
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated)
+  }
+
+  componentWillUnmount() {
+    // REmove event listeners
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated)
   }
 
   /**
@@ -58,6 +75,15 @@ export default class SessionMusclesPain extends Component {
       this.setState({muscles: data.muscles});
 
     })
+
+  }
+
+  /**
+   * React to when the muscle pain level has been updated
+   */
+  onMusclePainUpdated(event) {
+
+    this.loadSession();
 
   }
 

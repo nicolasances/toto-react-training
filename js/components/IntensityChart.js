@@ -146,14 +146,15 @@ class IntensityChart extends Component {
       let key = 'Circle-X-' + Math.random();
 
       let muscles = data[i].muscles;
+      let date = data[i].date;
 
       // If no muscles => rest day!
       if (muscles == null || muscles.length == 0) {
 
         let el = (
-          <View key={key} style={{width: this.columnWidth, alignItems: 'center'}}>
+          <TouchableOpacity key={key} style={{width: this.columnWidth, alignItems: 'center'}} onPress={() => {this.props.navigation.navigate('SessionStartScreen', {date: date})}}>
             <Image source={require('../../img/sleep.png')} style={styles.restImg} />
-          </View>
+          </TouchableOpacity>
         )
 
         elements.push(el);

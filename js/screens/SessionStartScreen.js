@@ -37,7 +37,8 @@ export default class SessionStartScreen extends Component<Props> {
     this.state = {
       plans: [],
       workouts: [],
-      muscles: []
+      muscles: [],
+      date: props.navigation.getParam('date'),
     }
 
     // Load the data
@@ -154,8 +155,11 @@ export default class SessionStartScreen extends Component<Props> {
       })
     }
 
+    // Which date?
+    let date = this.state.date == null ? moment().format('YYYYMMDD') : this.state.date;
+
     // Start the session!
-    new TrainingAPI().startSession(moment().format('YYYYMMDD'), workouts).then((data) => {
+    new TrainingAPI().startSession(date, workouts).then((data) => {
 
       if (data.id != null) {
 
@@ -230,7 +234,7 @@ export default class SessionStartScreen extends Component<Props> {
       <View style={styles.container}>
 
         <View style={styles.sessionContainer}>
-          <TodayBubble />
+          <TodayBubble date={this.state.date} />
           <View style={styles.actionsContainer}>
             {emptyMessage}
             {startButton}

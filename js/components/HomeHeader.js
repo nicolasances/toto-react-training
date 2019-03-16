@@ -163,8 +163,8 @@ class HomeHeader extends Component {
     else if (ongoingSessions) time = (
       <View style={styles.timeContainer}>
         <Text style={styles.timeLabel}>You're training!</Text>
-        <TouchableOpacity style={styles.timeTextContainer} onPress={this.goToSessionExecution}>
-          <Image source={require('../../img/man-training.png')} style={[styles.timeImg, {tintColor: TRC.TotoTheme.theme.COLOR_ACCENT}]} />
+        <TouchableOpacity style={styles.trainingImgTextContainer} onPress={this.goToSessionExecution}>
+          <Image source={require('../../img/man-training.png')} style={[styles.trainingImg, {tintColor: TRC.TotoTheme.theme.COLOR_ACCENT}]} />
         </TouchableOpacity>
       </View>
     )
@@ -173,7 +173,7 @@ class HomeHeader extends Component {
         <Text style={styles.timeLabel}>Today you trained</Text>
         <View style={styles.timeTextContainer}>
           <Text style={styles.timeText}>{this.state.trainingTime}</Text>
-          <Text style={styles.timeUnitText}>min</Text>
+          <Text style={styles.timeUnitText}>minutes</Text>
         </View>
       </View>
     )
@@ -252,8 +252,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     color: TRC.TotoTheme.theme.COLOR_TEXT,
-    fontSize: 40,
-    height: 43,
+    fontSize: 48,
     marginTop: 3
   },
   timeUnitText: {
@@ -267,5 +266,11 @@ const styles = StyleSheet.create({
     height: 42,
     tintColor: TRC.TotoTheme.theme.COLOR_TEXT,
     opacity: 0.8
+  },
+  trainingImg: {
+    width: 100,
+    height: 100,
+    tintColor: TRC.TotoTheme.theme.COLOR_TEXT,
+    marginTop: 12,
   },
 })

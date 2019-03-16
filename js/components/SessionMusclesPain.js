@@ -83,7 +83,19 @@ export default class SessionMusclesPain extends Component {
    */
   onMusclePainUpdated(event) {
 
-    this.loadSession();
+    // Update the pain of the muscle
+    let muscle = event.context.muscle;
+    let level = event.context.level;
+    let muscles = this.state.session.muscles;
+
+    if (muscles == null) muscles.push({muscle: muscle, painLevel: level});
+    else {
+      for (var i = 0; i < muscles.length; i++) {
+        if (muscles[i].muscle == muscle) muscles[i].painLevel = level;
+      }
+    }
+
+    this.setState({session: {...this.state.session, muscles: muscles}});
 
   }
 

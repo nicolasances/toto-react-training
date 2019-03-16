@@ -67,6 +67,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Retrieve the specified session's muscles
+   */
+  getSessionMuscles(id) {
+
+    return new TotoAPI().fetch('/training/session/sessions/' + id + '/muscles')
+          .then((response) => response.json());
+
+  }
+
+  /**
    * Deletes the specified session
    */
   deleteSession(id) {
@@ -165,6 +175,20 @@ export default class TrainingAPI {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(settings)
+    }).then((response => response.json()));
+
+  }
+
+  /**
+   * Sets the pain level of a given muscle in a give session
+   */
+  setMusclePain(sessionId, muscle, painLevel) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId + '/muscles/' + muscle, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({painLevel: painLevel})
     }).then((response => response.json()));
 
   }

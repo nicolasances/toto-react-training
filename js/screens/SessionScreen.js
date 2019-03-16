@@ -7,24 +7,16 @@ import GymExercisesList from '../components/GymExercisesList';
 import ExerciseSettings from '../components/util/settings/ExerciseSettings';
 import ExerciseMood from '../components/ExerciseMood';
 import TodayBubble from '../components/TodayBubble';
+import SessionMusclesPain from '../components/SessionMusclesPain';
 import moment from 'moment';
+import exerciseDataExtractor from '../components/util/list/ExerciseDataExtractor';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 const largeDevice = windowWidth > 600 ? true : false;
 
-var avatarSingle = require('../../img/type/single.png');
-var avatarSuperset = require('../../img/type/superset.png');
-var avatarDropset = require('../../img/type/dropset.png');
-var avatarStriping = require('../../img/type/striping.png');
-var avatarHourglass = require('../../img/type/hourglass.png');
-
-var imgTired = require('../../img/moods/tired.png');
-var imgOk = require('../../img/moods/ok.png');
-var imgDead = require('../../img/moods/dead.png');
-
-export default class SessionExecutionScreen extends Component<Props> {
+export default class SessionScreen extends Component<Props> {
 
     // Define the Navigation options
     static navigationOptions = ({navigation}) => {
@@ -49,9 +41,10 @@ export default class SessionExecutionScreen extends Component<Props> {
     this.state = {
       session: null,
       workouts: [],
+      muscles: [],
       moodModalVisible: false,
       selectedExercise: null,
-      exModalVisible: false
+      exModalVisible: false,
     }
 
     // Bindings
@@ -139,67 +132,6 @@ export default class SessionExecutionScreen extends Component<Props> {
   }
 
   /**
-   * Data extractor for the list of exercises
-   */
-  exerciseDataExtractor(item) {
-
-    let ex = item.item;
-    let s1, s2;
-    let r1, r2, r3;
-    let w1, w2, w3;
-    let title1, title2;
-    let subtitle1, subtitle2;
-    let avatar = {type: 'image'};
-
-    if (ex.type == 'single') {
-      s1 = ex.sets; r1 = ex.reps; w1 = ex.weight;
-      title1 = ex.name;
-      subtitle1 = s1 + ' X ' + r1 + '  ' + w1 + ' Kg';
-      avatar.value = avatarSingle;
-    }
-    else if (ex.type == 'superset') {
-      s1 = ex.ex1.sets; r1 = ex.ex1.reps; w1 = ex.ex1.weight;
-      s2 = ex.ex2.sets; r2 = ex.ex2.reps; w2 = ex.ex2.weight;
-      title1 = ex.ex1.name;
-      title2 = ex.ex2.name;
-      subtitle1 = s1 + ' X ' + r1 + '  ' + w1 + ' Kg';
-      subtitle2 = s2 + ' X ' + r2 + '  ' + w2 + ' Kg';
-      avatar.value = avatarSuperset;
-    }
-    else if (ex.type == 'dropset') {
-      s1 = ex.sets;
-      r1 = ex.reps1; r2 = ex.reps2;
-      w1 = ex.weight1; w2 = ex.weight2;
-      title1 = ex.name;
-      subtitle1 = s1 + ' X (' + r1 + ' + ' + r2 + ')' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg';
-      avatar.value = avatarDropset;
-    }
-    else if (ex.type == 'striping') {
-      s1 = ex.sets;
-      r1 = ex.reps1; r2 = ex.reps2; r3 = ex.reps3;
-      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
-      title1 = ex.name;
-      subtitle1 = s1 + ' X (7 + 7 + 7)' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
-      avatar.value = avatarStriping;
-    }
-    else if (ex.type == 'hourglass') {
-      w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
-      title1 = ex.name;
-      subtitle1 = w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
-      avatar.value = avatarHourglass;
-    }
-
-    return {
-      title: title1,
-      title2: title2,
-      subtitle1: subtitle1,
-      subtitle2: subtitle2,
-      avatar: avatar,
-    }
-
-  }
-
-  /**
    * Reacts to the click of the exercise avatar, which will trigger the completion (or un-completion) of the exercise
    */
   onExerciseAvatarPress(item) {
@@ -269,19 +201,6 @@ export default class SessionExecutionScreen extends Component<Props> {
   }
 
   /**
-   * Update the exercise and close the dialog
-   */
-  updateExercise() {
-
-    // Update the exercise
-    // Call the training api
-
-    // Close the modal
-    this.setState({exModalVisible: false});
-
-  }
-
-  /**
    * Deletes the current session
    */
   deleteSession() {
@@ -332,13 +251,7 @@ export default class SessionExecutionScreen extends Component<Props> {
       let workoutsTitles = [];
 
       for (var i = 0; i < this.state.workouts.length; i++) {
-
-        let w = (
-          <Text key={i} style={styles.workoutTitle}>{this.state.workouts[i].name}</Text>
-        )
-
-        workoutsTitles.push(w);
-
+        workoutsTitles.push((<Text key={i} style={styles.workoutTitle}>{this.state.workouts[i].name}</Text>));
       }
 
       workouts = (
@@ -358,21 +271,36 @@ export default class SessionExecutionScreen extends Component<Props> {
       </View>
     )
 
+    // Delete button
+    let deleteButton = (
+      <View style={{marginLeft: 6}} >
+        <TRC.TotoIconButton image={require('../../img/trash.png')} onPress={this.deleteSession} />
+      </View>
+    )
+
+    // Muscle pain
+    let musclesPain;
+    if (this.state.session != null && this.state.session.completed) musclesPain = (
+      <View style={styles.musclesPlainContainer}>
+        <SessionMusclesPain sessionId={this.state.session.id} />
+      </View>
+    )
+
     return (
       <View style={styles.container}>
 
         <View style={styles.header}>
           <TodayBubble date={this.state.date}/>
-          {completeButton}
-          <View style={{marginLeft: 6}} >
-            <TRC.TotoIconButton image={require('../../img/trash.png')} onPress={this.deleteSession} />
-          </View>
           {workouts}
+          {completeButton}
+          {deleteButton}
         </View>
+
+        {musclesPain}
 
         <GymExercisesList
             data={this.state.exercises}
-            dataExtractor={this.exerciseDataExtractor}
+            dataExtractor={exerciseDataExtractor.extract}
             onAvatarPress={this.onExerciseAvatarPress}
             onMoodPress={this.selectMood}
             onExercisePress={this.selectExercise}
@@ -417,5 +345,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginVertical: 3,
+  },
+  musclesPlainContainer: {
+    paddingHorizontal: 12,
+    marginBottom: 12,
   },
 });

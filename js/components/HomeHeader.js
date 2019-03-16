@@ -83,7 +83,7 @@ class HomeHeader extends Component {
 
     if (session == null) return;
 
-    this.props.navigation.navigate('SessionExecutionScreen', {sessionId: session.id});
+    this.props.navigation.navigate('SessionScreen', {sessionId: session.id});
 
   }
 

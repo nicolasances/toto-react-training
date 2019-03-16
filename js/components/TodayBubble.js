@@ -33,11 +33,7 @@ export default class TodayBubble extends Component {
 
 const styles = StyleSheet.create({
   todayContainer: {
-    borderWidth: 4,
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
+    width: 42,
     alignItems: 'center',
     justifyContent: 'center',
   },

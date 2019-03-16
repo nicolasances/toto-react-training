@@ -173,7 +173,7 @@ class IntensityChart extends Component {
 
         // Create the circle
         let circle = (
-          <TouchableOpacity key={muscleKey} style={styles.muscleCircle} onPress={() => {this.props.navigation.navigate('SessionExecutionScreen', {sessionId: sessionId})}}>
+          <TouchableOpacity key={muscleKey} style={styles.muscleCircle} onPress={() => {this.props.navigation.navigate('SessionScreen', {sessionId: sessionId})}}>
             <Text style={styles.muscleText}>{muscleText}</Text>
           </TouchableOpacity>
         )

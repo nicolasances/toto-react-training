@@ -88,7 +88,7 @@ export default class SessionMusclesPain extends Component {
     let level = event.context.level;
     let muscles = this.state.session.muscles;
 
-    if (muscles == null) muscles.push({muscle: muscle, painLevel: level});
+    if (muscles == null) muscles = [{muscle: muscle, painLevel: level}];
     else {
       for (var i = 0; i < muscles.length; i++) {
         if (muscles[i].muscle == muscle) muscles[i].painLevel = level;

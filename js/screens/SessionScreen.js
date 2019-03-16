@@ -8,6 +8,7 @@ import ExerciseSettings from '../components/util/settings/ExerciseSettings';
 import ExerciseMood from '../components/ExerciseMood';
 import TodayBubble from '../components/TodayBubble';
 import SessionMusclesPain from '../components/SessionMusclesPain';
+import SessionTiming from '../components/SessionTiming';
 import moment from 'moment';
 import exerciseDataExtractor from '../components/util/list/ExerciseDataExtractor';
 
@@ -286,6 +287,14 @@ export default class SessionScreen extends Component<Props> {
       </View>
     )
 
+    // Session timing
+    let sessionTiming;
+    if (this.state.session != null && this.state.session.completed) sessionTiming = (
+      <View style={styles.sessionTimingContainer}>
+        <SessionTiming sessionId={this.state.session.id}/>
+      </View>
+    )
+
     return (
       <View style={styles.container}>
 
@@ -296,7 +305,10 @@ export default class SessionScreen extends Component<Props> {
           {deleteButton}
         </View>
 
-        {musclesPain}
+        <View style={styles.secondLine}>
+          {musclesPain}
+          {sessionTiming}
+        </View>
 
         <GymExercisesList
             data={this.state.exercises}
@@ -346,8 +358,18 @@ const styles = StyleSheet.create({
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginVertical: 3,
   },
+  secondLine: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   musclesPlainContainer: {
     paddingHorizontal: 12,
     marginBottom: 12,
+  },
+  sessionTimingContainer: {
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    flex: 1,
+    alignItems: 'center',
   },
 });

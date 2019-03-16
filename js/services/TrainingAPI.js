@@ -127,6 +127,22 @@ export default class TrainingAPI {
   }
 
   /**
+   * Updates the duration of the session
+   * Start and End are 'HH:mm'
+   * duration is a number in minutes
+   */
+  setSessionDuration(sessionId, start, end, duration) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({startedAt: start, finishedAt: end, timeInMinutes: duration})
+    }).then((response => response.json()));
+
+  }
+
+  /**
    * Gets the data to display the intensity chart
    */
   getIntensityData(maxDays) {

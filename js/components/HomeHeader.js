@@ -22,6 +22,7 @@ class HomeHeader extends Component {
     this.onSessionDeleted = this.onSessionDeleted.bind(this);
     this.onSessionCreated = this.onSessionCreated.bind(this);
     this.onSessionCompleted = this.onSessionCompleted.bind(this);
+    this.onSessionDurationChanged = this.onSessionDurationChanged.bind(this);
   }
 
   /**
@@ -35,6 +36,7 @@ class HomeHeader extends Component {
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
 
   }
 
@@ -47,6 +49,7 @@ class HomeHeader extends Component {
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
   }
 
   /**
@@ -129,6 +132,16 @@ class HomeHeader extends Component {
    * When a session has been created
    */
   onSessionCompleted(event) {
+
+    // Reload the data
+    this.loadTodaySessions();
+
+  }
+
+  /**
+   * When a session has been created
+   */
+  onSessionDurationChanged(event) {
 
     // Reload the data
     this.loadTodaySessions();

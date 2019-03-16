@@ -131,22 +131,28 @@ export default class SessionMusclesPain extends Component {
    * rendering
    */
   render() {
+
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.timeContainer} onPress={this.changeStartTime}>
-          <Text style={styles.timeText}>{this.state.session.startedAt}</Text>
-        </TouchableOpacity>
-        <View style={styles.dotsContainer}>
-          <Image source={require('../../img/dots.png')} style={styles.dotsImage} />
-          <View style={styles.durationContainer}>
-            <Text style={styles.durationText}>{this.state.session.timeInMinutes}</Text>
-            <Text style={styles.durationLabel}>min</Text>
-          </View>
-          <Image source={require('../../img/dots.png')} style={styles.dotsImage} />
+        <View style={styles.labelContainer}>
+          <Text style={styles.labelText}>Duration of the training</Text>
         </View>
-        <TouchableOpacity style={styles.timeContainer} onPress={this.changeEndTime}>
-          <Text style={styles.timeText}>{this.state.session.finishedAt}</Text>
-        </TouchableOpacity>
+        <View style={styles.barContainer}>
+          <TouchableOpacity style={styles.timeContainer} onPress={this.changeStartTime}>
+            <Text style={styles.timeText}>{this.state.session.startedAt}</Text>
+          </TouchableOpacity>
+          <View style={styles.dotsContainer}>
+            <Image source={require('../../img/dots.png')} style={styles.dotsImage} />
+            <View style={styles.durationContainer}>
+              <Text style={styles.durationText}>{this.state.session.timeInMinutes}</Text>
+              <Text style={styles.durationLabel}>min</Text>
+            </View>
+            <Image source={require('../../img/dots.png')} style={styles.dotsImage} />
+          </View>
+          <TouchableOpacity style={styles.timeContainer} onPress={this.changeEndTime}>
+            <Text style={styles.timeText}>{this.state.session.finishedAt}</Text>
+          </TouchableOpacity>
+        </View>
 
         <Modal animationType="slide" transparent={false} visible={this.state.timeModalVisible}>
           <View style={styles.modalContainer}>
@@ -172,6 +178,17 @@ export default class SessionMusclesPain extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  labelContainer: {
+    marginBottom: 12,
+  },
+  labelText: {
+    fontSize: 12,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+  },
+  barContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'

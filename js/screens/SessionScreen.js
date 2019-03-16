@@ -12,11 +12,6 @@ import SessionTiming from '../components/SessionTiming';
 import moment from 'moment';
 import exerciseDataExtractor from '../components/util/list/ExerciseDataExtractor';
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-
-const largeDevice = windowWidth > 600 ? true : false;
-
 export default class SessionScreen extends Component<Props> {
 
     // Define the Navigation options
@@ -305,10 +300,8 @@ export default class SessionScreen extends Component<Props> {
           {deleteButton}
         </View>
 
-        <View style={styles.secondLine}>
-          {musclesPain}
-          {sessionTiming}
-        </View>
+        {sessionTiming}
+        {musclesPain}
 
         <GymExercisesList
             data={this.state.exercises}
@@ -358,18 +351,15 @@ const styles = StyleSheet.create({
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginVertical: 3,
   },
-  secondLine: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
   musclesPlainContainer: {
     paddingHorizontal: 12,
     marginBottom: 12,
+    paddingVertical: 12,
   },
   sessionTimingContainer: {
     paddingHorizontal: 12,
-    marginBottom: 12,
-    flex: 1,
+    paddingVertical: 12,
     alignItems: 'center',
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
   },
 });

@@ -243,6 +243,14 @@ export default class SessionScreen extends Component<Props> {
    */
   completeSession() {
 
+    // Update the state
+    this.setState({
+      session: {
+        ...this.state.session,
+        completed: true
+      }
+    });
+
     // call the api
     new TrainingAPI().completeSession(this.state.session.id).then((data) => {
 
@@ -250,10 +258,6 @@ export default class SessionScreen extends Component<Props> {
       TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.sessionCompleted, context: {sessionId: this.state.session.id}});
 
     });
-
-    // Go back
-    // TODO : go to the "fatigue" setting or actually request the fatigue contextually to the session closing
-    this.props.navigation.goBack();
 
   }
 

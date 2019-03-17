@@ -17,6 +17,12 @@ export default class PlansScreen extends Component<Props> {
                         color={TRC.TotoTheme.theme.COLOR_THEME}
                         titleColor={TRC.TotoTheme.theme.COLOR_TEXT}
                         back={true}
+                        rightButton={{
+                          image: require('TotoReactTraining/img/add.png'),
+                          navData: {
+                            screen: 'PlanCreationScreen'
+                          }
+                        }}
                         />
       }
     }

@@ -38,6 +38,7 @@ class SessionTimingGraph extends Component {
     // Bindings
     this.initGraph = this.initGraph.bind(this);
     this.onSessionCompleted = this.onSessionCompleted.bind(this);
+    this.onSessionDeleted = this.onSessionDeleted.bind(this);
     this.onSessionDurationChanged = this.onSessionDurationChanged.bind(this);
 
   }
@@ -51,6 +52,7 @@ class SessionTimingGraph extends Component {
 
     // Listen to events
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
 
     // Init the graph
@@ -64,11 +66,13 @@ class SessionTimingGraph extends Component {
     this.mounted = false;
 
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
   }
 
   // Event listeners
   onSessionCompleted() {this.loadData();}
+  onSessionDeleted() {this.loadData();}
   onSessionDurationChanged() {this.loadData();}
 
   /**

@@ -127,6 +127,21 @@ export default class TrainingAPI {
   }
 
   /**
+   * Sets the session's fatigue level
+   * - level : integer
+   */
+  setSessionFatigue(sessionId, level) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/session/sessions/' + sessionId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({postWorkoutFatigue: level})
+    }).then((response => response.json()));
+
+  }
+
+  /**
    * Updates the duration of the session
    * Start and End are 'HH:mm'
    * duration is a number in minutes

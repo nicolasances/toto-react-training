@@ -7,6 +7,7 @@ export const EVENTS = {
   sessionDeleted: 'sessionDeleted', // A session has been deleted
   sessionCompleted: 'sessionCompleted', // A session has been completed
   sessionDurationChanged: 'sessionDurationChanged', // A session duration has been changed
+  sessionFatigueChanged: 'sessionFatigueChanged', // A session fatigue level has been changed
   exerciseCompleted: 'exerciseCompleted', // An exercise has been completed
   exerciseMoodChanged: 'exerciseMoodChanged', // An exercise's mood has been changed
   exerciseSettingsChanged: 'exerciseSettingsChanged', // An exercise's settings have been changed

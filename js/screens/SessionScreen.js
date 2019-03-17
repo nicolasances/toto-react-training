@@ -1,16 +1,22 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Modal} from 'react-native';
 import TRC from 'toto-react-components';
-import * as config from '../Config';
-import TrainingAPI from '../services/TrainingAPI';
-import GymExercisesList from '../components/GymExercisesList';
-import ExerciseSettings from '../components/util/settings/ExerciseSettings';
-import ExerciseMood from '../components/ExerciseMood';
-import TodayBubble from '../components/TodayBubble';
-import SessionMusclesPain from '../components/SessionMusclesPain';
-import SessionTiming from '../components/SessionTiming';
+import * as config from 'TotoReactTraining/js/Config';
+import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
+import GymExercisesList from 'TotoReactTraining/js/components/GymExercisesList';
+import ExerciseSettings from 'TotoReactTraining/js/components/util/settings/ExerciseSettings';
+import ExerciseMood from 'TotoReactTraining/js/components/ExerciseMood';
+import TodayBubble from 'TotoReactTraining/js/components/TodayBubble';
+import SessionMusclesPain from 'TotoReactTraining/js/components/SessionMusclesPain';
+import SessionTiming from 'TotoReactTraining/js/components/SessionTiming';
+import SessionFatigueSetting from 'TotoReactTraining/js/components/SessionFatigueSetting';
 import moment from 'moment';
-import exerciseDataExtractor from '../components/util/list/ExerciseDataExtractor';
+import exerciseDataExtractor from 'TotoReactTraining/js/components/util/list/ExerciseDataExtractor';
+
+const imgQ = require('TotoReactTraining/img/question.png');
+const imgFull = require('TotoReactTraining/img/fatigue/full.png');
+const imgHalf = require('TotoReactTraining/img/fatigue/half.png');
+const imgZero = require('TotoReactTraining/img/fatigue/zero.png');
 
 export default class SessionScreen extends Component<Props> {
 
@@ -41,6 +47,7 @@ export default class SessionScreen extends Component<Props> {
       moodModalVisible: false,
       selectedExercise: null,
       exModalVisible: false,
+      fatigueModalVisible: false,
     }
 
     // Bindings
@@ -52,6 +59,7 @@ export default class SessionScreen extends Component<Props> {
     this.onExerciseCompleted = this.onExerciseCompleted.bind(this);
     this.onExerciseMoodChanged = this.onExerciseMoodChanged.bind(this);
     this.onExerciseSettingsChanged = this.onExerciseSettingsChanged.bind(this);
+    this.onSessionFatigueChanged = this.onSessionFatigueChanged.bind(this);
 
   }
 
@@ -63,6 +71,7 @@ export default class SessionScreen extends Component<Props> {
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.exerciseSettingsChanged, this.onExerciseSettingsChanged)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionFatigueChanged, this.onSessionFatigueChanged)
 
     // Load data
     this.loadSession();
@@ -74,6 +83,7 @@ export default class SessionScreen extends Component<Props> {
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseCompleted, this.onExerciseCompleted)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseMoodChanged, this.onExerciseMoodChanged)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.exerciseSettingsChanged, this.onExerciseSettingsChanged)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionFatigueChanged, this.onSessionFatigueChanged)
   }
 
   /**
@@ -177,6 +187,20 @@ export default class SessionScreen extends Component<Props> {
   }
 
   /**
+   * Changes the fatigue level of the session
+   */
+  onSessionFatigueChanged(event) {
+
+    this.setState({
+      session: {
+        ...this.state.session,
+        fatigue: event.context.fatigueLevel
+      }
+    })
+
+  }
+
+  /**
    * Reacts to the request to select a new mood for the specified list item
    */
   selectMood(item) {
@@ -274,6 +298,26 @@ export default class SessionScreen extends Component<Props> {
       </View>
     )
 
+    // Energy button
+    let energyButton;
+    if (this.state.session != null && this.state.session.completed) {
+
+      let fatigue = this.state.session.fatigue;
+      let img;
+
+      // Define which icon should be used
+      if (fatigue == null) img = imgQ;
+      else if (fatigue == 0) img = imgFull;
+      else if (fatigue == 1) img = imgHalf;
+      else if (fatigue == 2) img = imgZero;
+
+      energyButton = (
+        <View style={{marginLeft: 6}} >
+          <TRC.TotoIconButton image={img} onPress={() => {this.setState({fatigueModalVisible: true})}} />
+        </View>
+      )
+    }
+
     // Muscle pain
     let musclesPain;
     if (this.state.session != null && this.state.session.completed) musclesPain = (
@@ -290,6 +334,7 @@ export default class SessionScreen extends Component<Props> {
       </View>
     )
 
+
     return (
       <View style={styles.container}>
 
@@ -297,6 +342,7 @@ export default class SessionScreen extends Component<Props> {
           <TodayBubble date={this.state.date}/>
           {workouts}
           {completeButton}
+          {energyButton}
           {deleteButton}
         </View>
 
@@ -317,6 +363,10 @@ export default class SessionScreen extends Component<Props> {
 
         <Modal animationType="slide" transparent={false} visible={this.state.exModalVisible}>
           <ExerciseSettings exercise={this.state.selectedExercise} onSaved={() => {this.setState({exModalVisible: false})}} onCancel={() => {this.setState({exModalVisible: false})}} />
+        </Modal>
+
+        <Modal animationType="slide" transparent={false} visible={this.state.fatigueModalVisible}>
+          <SessionFatigueSetting sessionId={this.props.navigation.getParam('sessionId')} onSaved={() => {this.setState({fatigueModalVisible: false})}} onCancel={() => {this.setState({fatigueModalVisible: false})}} />
         </Modal>
 
       </View>

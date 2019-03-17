@@ -8,10 +8,15 @@ import TRC from 'toto-react-components';
 import moment from 'moment';
 import { withNavigation } from 'react-navigation';
 import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
+import * as config from 'TotoReactTraining/js/Config';
 
 const {Group, Shape, Surface} = ART;
 const d3 = {scale, shape, array, path};
 const window = Dimensions.get('window');
+
+const graphColorTheme = {
+  main: TRC.TotoTheme.theme.COLOR_THEME_LIGHT
+};
 
 /**
  * Creates a the chart displaying what has been done every day at the gym
@@ -29,8 +34,11 @@ class SessionTimingGraph extends Component {
       data: null,
     }
 
+
     // Bindings
     this.initGraph = this.initGraph.bind(this);
+    this.onSessionCompleted = this.onSessionCompleted.bind(this);
+    this.onSessionDurationChanged = this.onSessionDurationChanged.bind(this);
 
   }
 
@@ -38,7 +46,12 @@ class SessionTimingGraph extends Component {
    * Mount the component
    */
   componentDidMount() {
+
     this.mounted = true;
+
+    // Listen to events
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
 
     // Init the graph
     this.loadData();
@@ -49,7 +62,14 @@ class SessionTimingGraph extends Component {
   */
   componentWillUnmount() {
     this.mounted = false;
+
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCompleted, this.onSessionCompleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDurationChanged, this.onSessionDurationChanged);
   }
+
+  // Event listeners
+  onSessionCompleted() {this.loadData();}
+  onSessionDurationChanged() {this.loadData();}
 
   /**
    * Loads the data
@@ -153,7 +173,7 @@ class SessionTimingGraph extends Component {
 
     var path = line([...data]);
 
-    return this.createShape(path, TRC.TotoTheme.theme.COLOR_THEME_LIGHT, null, 1);
+    return this.createShape(path, graphColorTheme.main, null, 1);
 
   }
 
@@ -176,7 +196,7 @@ class SessionTimingGraph extends Component {
 
       let plot = this.circlePath(this.x(xVal), this.y(yVal), radius);
 
-      plots.push(this.createShape(plot, TRC.TotoTheme.theme.COLOR_THEME_LIGHT, TRC.TotoTheme.theme.COLOR_THEME, 1));
+      plots.push(this.createShape(plot, graphColorTheme.main, TRC.TotoTheme.theme.COLOR_THEME, 1));
 
     }
 
@@ -256,10 +276,10 @@ const styles = StyleSheet.create({
   },
   timeLabel: {
     fontSize: 12,
-    color: TRC.TotoTheme.theme.COLOR_THEME_LIGHT
+    color: graphColorTheme.main
   },
   timeMinLabel: {
     fontSize: 8,
-    color: TRC.TotoTheme.theme.COLOR_THEME_LIGHT
+    color: graphColorTheme.main
   },
 });

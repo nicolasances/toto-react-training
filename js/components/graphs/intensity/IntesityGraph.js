@@ -12,13 +12,13 @@ export default class IntesityGraph extends Component {
 
     super(props);
 
-    this.state = {
-    };
+    this.state = {};
 
     // Binding functions to this
     this.onSessionDeleted = this.onSessionDeleted.bind(this);
     this.onSessionCreated = this.onSessionCreated.bind(this);
     this.onMusclePainUpdated = this.onMusclePainUpdated.bind(this);
+    this.onSessionFatigueChanged = this.onSessionFatigueChanged.bind(this);
   }
 
   /**
@@ -32,6 +32,7 @@ export default class IntesityGraph extends Component {
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.sessionFatigueChanged, this.onSessionFatigueChanged);
   }
 
   /**
@@ -43,6 +44,7 @@ export default class IntesityGraph extends Component {
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionDeleted, this.onSessionDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionCreated, this.onSessionCreated);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.musclePainUpdated, this.onMusclePainUpdated);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.sessionFatigueChanged, this.onSessionFatigueChanged);
   }
 
   /**
@@ -58,31 +60,10 @@ export default class IntesityGraph extends Component {
 
   }
 
-  /**
-   * When a session has been deleted
-   */
-  onSessionDeleted(event) {
-    // Reload the data
-    this.loadIntensityData();
-
-  }
-
-  /**
-   * When a session has been created
-   */
-  onSessionCreated(event) {
-    // Reload the data
-    this.loadIntensityData();
-
-  }
-
-  /**
-  * When a muscle pain level has been updated
-  */
-  onMusclePainUpdated(event) {
-    // Reload the data
-    this.loadIntensityData();
-  }
+  onSessionDeleted(event) {this.loadIntensityData();}
+  onSessionCreated(event) {this.loadIntensityData();}
+  onMusclePainUpdated(event) {this.loadIntensityData();}
+  onSessionFatigueChanged(event) {this.loadIntensityData();}
 
   /**
    * Render

@@ -130,6 +130,7 @@ class IntensityChart extends Component {
 
   /**
    * Creates the circles with the muscle icon inside
+   * as well as the pain bubbles
    */
   createMuscles(props) {
 
@@ -175,11 +176,12 @@ class IntensityChart extends Component {
 
         let muscleText = muscles[m].muscle.substring(0, 1).toUpperCase() + muscles[m].muscle.substring(1, 2);
         let sessionId = muscles[m].sessionId;
+        let muscleNoPainSet = (muscles[m].pain == null && moment(data[i].date, 'YYYYMMDD').isBefore(moment()) && data[i].date != moment().format('YYYYMMDD')) ? {opacity: 0.5} : {};
 
         // Create the circle
         let circle = (
-          <TouchableOpacity key={muscleKey} style={[styles.muscleCircle, fatigueOpacity]} onPress={() => {this.props.navigation.navigate('SessionScreen', {sessionId: sessionId})}}>
-            <Text style={styles.muscleText}>{muscleText}</Text>
+          <TouchableOpacity key={muscleKey} style={[styles.muscleCircle, fatigueOpacity, muscleNoPainSet]} onPress={() => {this.props.navigation.navigate('SessionScreen', {sessionId: sessionId})}}>
+            <Text style={[styles.muscleText]}>{muscleText}</Text>
           </TouchableOpacity>
         )
 
@@ -197,9 +199,6 @@ class IntensityChart extends Component {
           {circles}
         </View>
       )
-
-      // Create the image of the muscle
-      // TODO
 
       // Combine them
       let el = (

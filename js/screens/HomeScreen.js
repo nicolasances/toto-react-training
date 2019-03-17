@@ -5,6 +5,7 @@ import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import HomeHeader from '../components/HomeHeader';
 import IntesityGraph from 'TotoReactTraining/js/components/graphs/intensity/IntesityGraph';
+import SessionTimingGraph from 'TotoReactTraining/js/components/graphs/timing/SessionTimingGraph';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -132,6 +133,8 @@ export default class HomeScreen extends Component<Props> {
         <HomeHeader />
 
         <View style={{flex: 1}} />
+
+        <SessionTimingGraph />
 
         <IntesityGraph />
 

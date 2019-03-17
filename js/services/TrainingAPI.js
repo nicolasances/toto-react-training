@@ -143,6 +143,15 @@ export default class TrainingAPI {
   }
 
   /**
+   * Get the training durations for the passed days
+   */
+  getTrainingDurations(dateFrom) {
+
+    return new TotoAPI().fetch('/training/stats/durations?dateFrom=' + dateFrom).then((response) => response.json());
+
+  }
+
+  /**
    * Gets the data to display the intensity chart
    */
   getIntensityData(maxDays) {

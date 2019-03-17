@@ -260,15 +260,11 @@ class IntensityChart extends Component {
 
     this.initGraph(this.props);
 
-    let bars;
     let labels = this.createXAxisLabels(this.props);
     let muscles = this.createMuscles(this.props);
 
     return (
       <View style={styles.container}>
-        <Surface height={this.height} width={window.width}>
-          {bars}
-        </Surface>
         {muscles}
         {labels}
       </View>

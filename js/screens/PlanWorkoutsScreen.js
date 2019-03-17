@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
 import TRC from 'toto-react-components';
-import * as config from '../Config';
-import TrainingAPI from '../services/TrainingAPI';
-import TotoFlatList from '../components/TotoFlatList';
+import * as config from 'TotoReactTraining/js/Config';
+import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
+import TotoFlatList from 'TotoReactTraining/js/components/TotoFlatList';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;

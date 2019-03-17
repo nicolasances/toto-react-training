@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
 import TRC from 'toto-react-components';
-import * as config from '../Config';
-import TrainingAPI from '../services/TrainingAPI';
-import TotoFlatList from '../components/TotoFlatList';
-import TodayBubble from '../components/TodayBubble';
+import * as config from 'TotoReactTraining/js/Config';
+import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
+import TotoFlatList from 'TotoReactTraining/js/components/TotoFlatList';
+import TodayBubble from 'TotoReactTraining/js/components/TodayBubble';
+import PlansList from 'TotoReactTraining/js/components/plans/PlansList';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
@@ -189,7 +190,7 @@ export default class SessionStartScreen extends Component<Props> {
     if (this.state.workouts == null || this.state.workouts.length == 0) emptyMessage = (
 
       <View style={{flexDirection: 'row'}}>
-        <Image style={styles.emptyMessageIcon} source={require('../../img/down-arrow.png')} />
+        <Image style={styles.emptyMessageIcon} source={require('TotoReactTraining/img/down-arrow.png')} />
         <Text style={styles.emptyMessage}>Add some workout!</Text>
       </View>
     )
@@ -198,7 +199,7 @@ export default class SessionStartScreen extends Component<Props> {
     let startButton;
 
     if (this.state.muscles.length > 0) startButton = (
-        <TRC.TotoIconButton image={require('../../img/tick.png')} onPress={this.onStart} />
+        <TRC.TotoIconButton image={require('TotoReactTraining/img/tick.png')} onPress={this.onStart} />
     )
 
     // Affected Muscles
@@ -242,11 +243,7 @@ export default class SessionStartScreen extends Component<Props> {
           {muscles}
         </View>
 
-        <TotoFlatList
-            data={this.state.plans}
-            dataExtractor={this.planDataExtractor}
-            onItemPress={this.onSelectPlan}
-            />
+        <PlansList onSelectPlan={this.onSelectPlan} />
 
       </View>
     );

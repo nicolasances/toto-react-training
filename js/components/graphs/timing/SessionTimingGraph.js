@@ -177,7 +177,7 @@ class SessionTimingGraph extends Component {
 
     var path = line([...data]);
 
-    return this.createShape(path, graphColorTheme.main, null, 1);
+    return this.createShape(path, graphColorTheme.main, null, 2);
 
   }
 
@@ -200,7 +200,7 @@ class SessionTimingGraph extends Component {
 
       let plot = this.circlePath(this.x(xVal), this.y(yVal), radius);
 
-      plots.push(this.createShape(plot, graphColorTheme.main, TRC.TotoTheme.theme.COLOR_THEME, 1));
+      plots.push(this.createShape(plot, graphColorTheme.main, TRC.TotoTheme.theme.COLOR_THEME, 2));
 
     }
 

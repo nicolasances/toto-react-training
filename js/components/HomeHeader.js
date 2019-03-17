@@ -160,7 +160,7 @@ class HomeHeader extends Component {
     // Left Button
     leftButton = (
       <View style={styles.buttonContainer}>
-        <TRC.TotoIconButton image={require('../../img/calendar.png')} size="l" label="Calendar" />
+        <TRC.TotoIconButton image={require('../../img/todo-list.png')} size="l" label="Plans" onPress={() => {this.props.navigation.navigate('PlansScreen')}} />
       </View>
     )
 

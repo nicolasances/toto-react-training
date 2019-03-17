@@ -162,6 +162,10 @@ class IntensityChart extends Component {
         continue;
       }
 
+      // Set the opacity: if the session has no fatigue being set, opacity is lower
+      // It means: YOU NEED TO SET THE FATIGUE LEVEL!
+      let fatigueOpacity = data[i].fatigue == null ? {opacity: 0.5} : {};
+
       // Create a circle for each muscle
       let circles = [];
 
@@ -174,7 +178,7 @@ class IntensityChart extends Component {
 
         // Create the circle
         let circle = (
-          <TouchableOpacity key={muscleKey} style={styles.muscleCircle} onPress={() => {this.props.navigation.navigate('SessionScreen', {sessionId: sessionId})}}>
+          <TouchableOpacity key={muscleKey} style={[styles.muscleCircle, fatigueOpacity]} onPress={() => {this.props.navigation.navigate('SessionScreen', {sessionId: sessionId})}}>
             <Text style={styles.muscleText}>{muscleText}</Text>
           </TouchableOpacity>
         )

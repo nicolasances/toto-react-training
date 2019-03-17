@@ -153,7 +153,7 @@ class IntensityChart extends Component {
 
         let el = (
           <TouchableOpacity key={key} style={{width: this.columnWidth, alignItems: 'center'}} onPress={() => {this.props.navigation.navigate('SessionStartScreen', {date: date})}}>
-            <Image source={require('../../img/sleep.png')} style={styles.restImg} />
+            <Image source={require('TotoReactTraining/img/sleep.png')} style={styles.restImg} />
           </TouchableOpacity>
         )
 

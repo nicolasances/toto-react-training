@@ -4,7 +4,7 @@ import TRC from 'toto-react-components';
 import * as config from '../Config';
 import TrainingAPI from '../services/TrainingAPI';
 import HomeHeader from '../components/HomeHeader';
-import IntesityGraph from '../components/IntesityGraph';
+import IntesityGraph from 'TotoReactTraining/js/components/graphs/intensity/IntesityGraph';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;

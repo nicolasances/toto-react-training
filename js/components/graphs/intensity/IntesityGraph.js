@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
 import TRC from 'toto-react-components';
-import * as config from '../Config';
-import TrainingAPI from '../services/TrainingAPI';
+import * as config from 'TotoReactTraining/js/Config';
+import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
 import IntensityChart from './IntensityChart';
 import moment from 'moment';
 

@@ -28,18 +28,18 @@ class PlansList extends Component<Props> {
     // Load the data
     this.loadPlans();
 
+    // Bind
+    this.onPlanCreated = this.onPlanCreated.bind(this);
+    this.onPlanDeleted = this.onPlanDeleted.bind(this);
+
   }
 
   /**
    * Loads the available training plans
    */
   loadPlans() {
-
     new TrainingAPI().getPlans().then((data) => {
-      // Update the state
-      this.setState({
-        plans: data.plans
-      });
+      this.setState({plans: []}, () => {this.setState({plans: data.plans})});
     });
   }
 
@@ -48,12 +48,14 @@ class PlansList extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.planCreated, this.onPlanCreated)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.planDeleted, this.onPlanDeleted)
   }
 
   componentWillUnmount() {
     // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.planCreated, this.onPlanCreated)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.planDeleted, this.onPlanDeleted)
   }
 
   /**
@@ -71,6 +73,10 @@ class PlansList extends Component<Props> {
     }
 
   }
+
+  // Reactors
+  onPlanCreated(event) {this.loadPlans();}
+  onPlanDeleted(event) {this.loadPlans();}
 
   /**
    * Renders the home screen

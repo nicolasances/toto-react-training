@@ -36,6 +36,13 @@ export default class PlansScreen extends Component<Props> {
     this.state = {
     }
 
+    this.onSelectPlan = this.onSelectPlan.bind(this);
+
+  }
+
+  // On select plan
+  onSelectPlan(item) {
+    this.props.navigation.navigate('PlanWorkoutsScreen', {plan: item.item, deletable: true, enableExercisesNavigation: true})
   }
 
   /**
@@ -46,7 +53,7 @@ export default class PlansScreen extends Component<Props> {
     return (
       <View style={styles.container}>
 
-        <PlansList />
+        <PlansList onSelectPlan={this.onSelectPlan}/>
 
       </View>
     );

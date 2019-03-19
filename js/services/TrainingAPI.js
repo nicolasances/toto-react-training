@@ -18,6 +18,43 @@ export default class TrainingAPI {
   }
 
   /**
+   * Retrieves the specified plan
+   */
+  getPlan(id) {
+
+    return new TotoAPI().fetch('/training/plan/plans/' + id)
+        .then((response) => response.json());
+
+  }
+
+  /**
+   * Create a new plan
+   * Requires the plan to be a {name, start, weeks}
+   */
+  postPlan(plan) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(plan)
+    }).then((response => response.json()));
+
+  }
+
+  /**
+   * Deletes the plan
+   */
+  deletePlan(planId) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId, {method: 'DELETE',}).then((response => response.json()));
+
+  }
+
+  /**
    * Retrieves the workouts of the specified plan
    */
   getPlanWorkouts(planId) {
@@ -33,6 +70,40 @@ export default class TrainingAPI {
 
     return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId)
           .then((response) => response.json());
+
+  }
+
+  /**
+   * Retrieves the workout exercises
+   */
+  getWorkoutExercises(planId, workoutId) {
+
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises')
+          .then((response) => response.json());
+  }
+
+  /**
+   * Deletes the exericse
+   */
+  deleteWorkoutExercise(planId, workoutId, exerciseId) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises/' + exerciseId, {method: 'DELETE'}).then((response => response.json()));
+
+  }
+
+  /**
+   * Changes the exercise settings.
+   * Note that the settings are going to be provided as is as the body of the request
+   */
+  setWorkoutExerciseSettings(planId, workoutId, exerciseId, settings) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises/' + exerciseId, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(settings)
+    }).then((response => response.json()));
 
   }
 

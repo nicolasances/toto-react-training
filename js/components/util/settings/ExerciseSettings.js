@@ -10,6 +10,10 @@ import TrainingAPI from '../../../services/TrainingAPI';
 import * as config from '../../../Config';
 import Swiper from 'react-native-swiper';
 
+/**
+ * Supports the following props
+ * - enableDelete             : (OPTIONAL, defautt false) enables the deletion of the exercise
+ */
 export default class ExerciseSettings extends Component {
 
   constructor(props) {
@@ -21,6 +25,8 @@ export default class ExerciseSettings extends Component {
 
     // Bindings
     this.saveExercise = this.saveExercise.bind(this);
+    this.saveSessionExercise = this.saveSessionExercise.bind(this);
+    this.saveWorkoutExercise = this.saveWorkoutExercise.bind(this);
 
   }
 
@@ -73,6 +79,19 @@ export default class ExerciseSettings extends Component {
     }
 
     // Save
+    if (this.state.exercise.sessionId) this.saveSessionExercise(this.state.exercise, settings);
+    else if (this.state.exercise.workoutId) this.saveWorkoutExercise(this.state.exercise, settings);
+
+    // Close the modal
+    this.props.onSaved();
+
+  }
+
+  /**
+   * Saves the session exercise (part of an active session)
+   */
+  saveSessionExercise(ex, settings) {
+
     new TrainingAPI().setExerciseSettings(this.state.exercise.sessionId, this.state.exercise.id, settings).then((data) => {
 
       // Send EVENT
@@ -80,12 +99,56 @@ export default class ExerciseSettings extends Component {
 
     });
 
-    // Close the modal
-    this.props.onSaved();
+  }
+
+  /**
+   * Saves the plan workout exercise
+   */
+  saveWorkoutExercise(ex, settings) {
+
+    new TrainingAPI().setWorkoutExerciseSettings(this.state.exercise.planId, this.state.exercise.workoutId, this.state.exercise.id, settings).then((data) => {
+
+      // Send EVENT
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.workoutExerciseSettingsChanged, context: {exerciseId: this.state.exercise.id}});
+
+    });
 
   }
 
+  /**
+   * Deletes this exercise
+   */
+  deleteExercise() {
+
+    // Delete
+    // if (this.state.exercise.sessionId) this.saveSessionExercise(this.state.exercise, settings);
+    // For now only supports deleting a workout exercise
+    if (this.state.exercise.workoutId) this.deleteWorkoutExercise();
+
+  }
+
+  /**
+   * Deletes the workout exercise
+   */
+  deleteWorkoutExercise() {
+
+    new TrainingAPI().deleteWorkoutExercise(this.state.exercise.planId, this.state.exercise.workoutId, this.state.exercise.id).then((data) => {
+
+      // Send EVENT
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.workoutExerciseDeleted, context: {exerciseId: this.state.exercise.id}});
+
+    });
+
+  }
+
+
   render() {
+
+    // Delete button, only if enableDelete = true
+    let deleteButton;
+    if (this.props.enableDelete) deleteButton = (
+      <TRC.TotoIconButton image={require('../../../../img/trash.png')} onPress={this.deleteExercise} />
+    )
 
     // The settings for the exercise
     let settings;
@@ -104,6 +167,7 @@ export default class ExerciseSettings extends Component {
         </View>
         <View style={styles.buttonsContainer}>
           <TRC.TotoIconButton image={require('../../../../img/tick.png')} onPress={this.saveExercise} />
+          {deleteButton}
           <TRC.TotoIconButton image={require('../../../../img/cross.png')} onPress={this.props.onCancel} />
         </View>
       </View>

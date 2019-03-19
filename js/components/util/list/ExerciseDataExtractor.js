@@ -25,10 +25,12 @@ class ExerciseDataExtractor {
     let subtitle1, subtitle2;
     let avatar = {type: 'image'};
 
+    var q = (value) => {return value == null ? '?' : value}
+
     if (ex.type == 'single') {
       s1 = ex.sets; r1 = ex.reps; w1 = ex.weight;
       title1 = ex.name;
-      subtitle1 = s1 + ' X ' + r1 + '  ' + w1 + ' Kg';
+      subtitle1 = q(s1) + ' X ' + q(r1) + '  ' + q(w1) + ' Kg';
       avatar.value = avatarSingle;
     }
     else if (ex.type == 'superset') {
@@ -36,8 +38,8 @@ class ExerciseDataExtractor {
       s2 = ex.ex2.sets; r2 = ex.ex2.reps; w2 = ex.ex2.weight;
       title1 = ex.ex1.name;
       title2 = ex.ex2.name;
-      subtitle1 = s1 + ' X ' + r1 + '  ' + w1 + ' Kg';
-      subtitle2 = s2 + ' X ' + r2 + '  ' + w2 + ' Kg';
+      subtitle1 = q(s1) + ' X ' + q(r1) + '  ' + q(w1) + ' Kg';
+      subtitle2 = q(s2) + ' X ' + q(r2) + '  ' + q(w2) + ' Kg';
       avatar.value = avatarSuperset;
     }
     else if (ex.type == 'dropset') {
@@ -45,7 +47,7 @@ class ExerciseDataExtractor {
       r1 = ex.reps1; r2 = ex.reps2;
       w1 = ex.weight1; w2 = ex.weight2;
       title1 = ex.name;
-      subtitle1 = s1 + ' X (' + r1 + ' + ' + r2 + ')' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg';
+      subtitle1 = q(s1) + ' X (' + q(r1) + ' + ' + q(r2) + ')' + '  ' + q(w1) + ' Kg' + '  ' + q(w2) + ' Kg';
       avatar.value = avatarDropset;
     }
     else if (ex.type == 'striping') {
@@ -53,13 +55,13 @@ class ExerciseDataExtractor {
       r1 = ex.reps1; r2 = ex.reps2; r3 = ex.reps3;
       w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
       title1 = ex.name;
-      subtitle1 = s1 + ' X (7 + 7 + 7)' + '  ' + w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
+      subtitle1 = q(s1) + ' X (7 + 7 + 7)' + '  ' + q(w1) + ' Kg' + '  ' + q(w2) + ' Kg' + '  ' + q(w3) + ' Kg';
       avatar.value = avatarStriping;
     }
     else if (ex.type == 'hourglass') {
       w1 = ex.weight1; w2 = ex.weight2; w3 = ex.weight3;
       title1 = ex.name;
-      subtitle1 = w1 + ' Kg' + '  ' + w2 + ' Kg' + '  ' + w3 + ' Kg';
+      subtitle1 = q(w1) + ' Kg' + '  ' + q(w2) + ' Kg' + '  ' + q(w3) + ' Kg';
       avatar.value = avatarHourglass;
     }
 

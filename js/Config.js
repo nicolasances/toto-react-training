@@ -11,4 +11,8 @@ export const EVENTS = {
   exerciseCompleted: 'exerciseCompleted', // An exercise has been completed
   exerciseMoodChanged: 'exerciseMoodChanged', // An exercise's mood has been changed
   exerciseSettingsChanged: 'exerciseSettingsChanged', // An exercise's settings have been changed
+  planCreated: 'planCreated', // A plan has been created
+  planDeleted: 'planDeleted', // A plan has been created
+  workoutExerciseSettingsChanged: 'workoutExerciseSettingsChanged', // An xercises settings have been changed
+  workoutExerciseDeleted: 'workoutExerciseDeleted', // A workout exercise has been deleted
 }

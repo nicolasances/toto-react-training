@@ -4,6 +4,7 @@ import TRC from 'toto-react-components';
 import * as config from 'TotoReactTraining/js/Config';
 import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
 import TotoFlatList from 'TotoReactTraining/js/components/TotoFlatList';
+import PlanDate from 'TotoReactTraining/js/components/plans/PlanDate';
 import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
@@ -12,8 +13,12 @@ const windowWidth = Dimensions.get('window').width;
 const largeDevice = windowWidth > 600 ? true : false;
 
 /**
- * Supports:
- *  - onSelect            : (OPTIONAL) function(workout) to be called when a workout is selected
+ * Shows the workouts of the specified plan
+ * Navigation parameters:
+ *  - plan                      : (MANDATORY) the plan as an {}
+ *  - onSelect                  : (OPTIONAL) function(workout) to be called when a workout is selected
+ *  - deletable                 : (OPTIONAL, default false) true|false indicates if the delete functionality should be shown for this plan
+ *  - enableExercisesNavigation : (OPTIONAL, default false) enables nav to WorkoutExercisesScreen
  */
 export default class PlanWorkoutsScreen extends Component<Props> {
 
@@ -27,6 +32,7 @@ export default class PlanWorkoutsScreen extends Component<Props> {
                         color={TRC.TotoTheme.theme.COLOR_THEME}
                         titleColor={TRC.TotoTheme.theme.COLOR_TEXT}
                         back={true}
+
                         />
       }
     }
@@ -39,7 +45,8 @@ export default class PlanWorkoutsScreen extends Component<Props> {
 
     this.state = {
       plan: this.props.navigation.getParam('plan'),
-      workouts: []
+      workouts: [],
+      deletable: this.props.navigation.getParam('deletable') ? true : false
     }
 
     // Load the data
@@ -47,6 +54,7 @@ export default class PlanWorkoutsScreen extends Component<Props> {
 
     // Bindings
     this.onItemPress = this.onItemPress.bind(this);
+    this.deletePlan = this.deletePlan.bind(this);
 
   }
 
@@ -105,9 +113,26 @@ export default class PlanWorkoutsScreen extends Component<Props> {
       // Go back
       this.props.navigation.goBack();
     }
-    else {
-      // TODO
+    else if (this.props.navigation.getParam('enableExercisesNavigation')) {
+
+      this.props.navigation.navigate('WorkoutExercisesScreen', {workout: item.item})
+
     }
+  }
+
+  /**
+   * Deletes the plan
+   */
+  deletePlan() {
+
+    new TrainingAPI().deletePlan(this.state.plan.id).then((data) => {
+
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.planDeleted, context: {planId: this.state.plan.id}});
+
+      this.props.navigation.goBack();
+
+    });
+
   }
 
   /**
@@ -117,6 +142,12 @@ export default class PlanWorkoutsScreen extends Component<Props> {
 
     return (
       <View style={styles.container}>
+
+        <View style={styles.planHeaderContainer}>
+          <PlanDate date={this.state.plan.start} />
+          <PlanDate date={this.state.plan.end} />
+          <TRC.TotoIconButton disabled={!this.state.deletable} image={require('TotoReactTraining/img/trash.png')} onPress={this.deletePlan}/>
+        </View>
 
         <TotoFlatList
           data={this.state.workouts}
@@ -137,4 +168,11 @@ const styles = StyleSheet.create({
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     paddingTop: 24
   },
+  planHeaderContainer: {
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 12,
+  }
 });

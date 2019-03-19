@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, TextInput, FlatList, KeyboardAvoidingView, Modal, DatePickerIOS, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import TRC from 'toto-react-components';
+import TrainingAPI from 'TotoReactTraining/js/services/TrainingAPI';
+import PlanDate from 'TotoReactTraining/js/components/plans/PlanDate';
 import * as config from 'TotoReactTraining/js/Config';
 import moment from 'moment';
 
@@ -39,6 +41,7 @@ export default class PlanCreationScreen extends Component<Props> {
     this.confirmPickedDate = this.confirmPickedDate.bind(this);
     this.calculateEndDate = this.calculateEndDate.bind(this);
     this.confirmWeeks = this.confirmWeeks.bind(this);
+    this.savePlan = this.savePlan.bind(this);
 
   }
 
@@ -62,6 +65,25 @@ export default class PlanCreationScreen extends Component<Props> {
   }
 
   /**
+   * Save the plan
+   */
+  savePlan() {
+
+    new TrainingAPI().postPlan(this.state.plan).then((data) => {
+
+      // Update the state with the new plan id
+      this.setState({plan: {...this.state.plan, id: data.id}}, () => {
+
+        // Throw an event
+        TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.planCreated, context: {plan: this.state.plan}});
+
+      });
+
+    })
+
+  }
+
+  /**
    * Renders the home screen
    */
   render() {
@@ -70,22 +92,14 @@ export default class PlanCreationScreen extends Component<Props> {
     let startDate, endDate;
 
     if (this.state.plan != null && this.state.plan.start != null) startDate = (
-      <View style={styles.dateContainer}>
-        <Text style={styles.dateDay}>{moment(this.state.plan.start, 'YYYYMMDD').format('D')}</Text>
-        <Text style={styles.dateMonth}>{moment(this.state.plan.start, 'YYYYMMDD').format('MMM')}</Text>
-        <Text style={styles.dateYear}>{moment(this.state.plan.start, 'YYYYMMDD').format('YYYY')}</Text>
-      </View>
+      <PlanDate date={this.state.plan.start} />
     )
     else startDate = (
       <TRC.TotoIconButton image={require('TotoReactTraining/img/calendar.png')} label='Starting' onPress={this.pickStartDate}/>
     )
 
     if (this.state.plan != null && this.state.plan.end != null) endDate = (
-      <View style={styles.dateContainer}>
-        <Text style={styles.dateDay}>{moment(this.state.plan.end, 'YYYYMMDD').format('D')}</Text>
-        <Text style={styles.dateMonth}>{moment(this.state.plan.end, 'YYYYMMDD').format('MMM')}</Text>
-        <Text style={styles.dateYear}>{moment(this.state.plan.end, 'YYYYMMDD').format('YYYY')}</Text>
-      </View>
+      <PlanDate date={this.state.plan.end} />
     )
     else endDate = (
       <TRC.TotoIconButton image={require('TotoReactTraining/img/calendar.png')} label='Ending' onPress={this.pickEndDate} />
@@ -96,7 +110,7 @@ export default class PlanCreationScreen extends Component<Props> {
 
     if (this.state.plan != null && this.state.plan.id == null && this.state.plan.name != null && this.state.plan.start != null && this.state.plan.weeks != null) createPlanButton = (
       <View style={styles.createPlanButtonContainer}>
-        <TRC.TotoIconButton image={require('TotoReactTraining/img/tick.png')} />
+        <TRC.TotoIconButton image={require('TotoReactTraining/img/tick.png')} size='l' onPress={this.savePlan} />
       </View>
     )
 
@@ -114,6 +128,9 @@ export default class PlanCreationScreen extends Component<Props> {
             autoCapitalize='sentences'
             keyboardType='default'
              />
+        </View>
+
+        <View style={{flex: 1}}>
         </View>
 
         {createPlanButton}
@@ -177,30 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     marginLeft: 12,
-  },
-  dateContainer: {
-    borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
-    borderWidth: 2,
-    borderRadius: 5,
-    paddingHorizontal: 6,
-    paddingVertical: 6,
-    marginRight: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 52,
-  },
-  dateDay: {
-    fontSize: 22,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-  },
-  dateMonth: {
-    fontSize: 12,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
-    textTransform: 'uppercase',
-  },
-  dateYear: {
-    fontSize: 8,
-    color: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   createPlanButtonContainer: {
     marginVertical: 24,

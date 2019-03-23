@@ -77,6 +77,8 @@ export default class PlanCreationScreen extends Component<Props> {
         // Throw an event
         TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.planCreated, context: {plan: this.state.plan}});
 
+        this.props.navigation.goBack();
+
       });
 
     })

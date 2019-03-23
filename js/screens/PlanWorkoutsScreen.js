@@ -91,7 +91,10 @@ export default class PlanWorkoutsScreen extends Component<Props> {
 
     return {
       title: item.item.name,
-      avatar: {},
+      avatar: {
+        type: 'string',
+        value: item.item.name.substring(0, 2)
+      },
     }
   }
 

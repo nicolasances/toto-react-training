@@ -80,8 +80,8 @@ export default class ExerciseSettings extends Component {
     }
 
     // Save
-    if (this.state.exercise.sessionId) this.saveSessionExercise(this.state.exercise, settings);
-    else if (this.state.exercise.workoutId) this.saveWorkoutExercise(this.state.exercise, settings);
+    if (this.state.exercise.sessionId && this.state.exercise.id) this.saveSessionExercise(this.state.exercise, settings);
+    else if (this.state.exercise.workoutId && this.state.exercise.id) this.saveWorkoutExercise(this.state.exercise, settings);
 
     // Close the modal
     this.props.onSaved(settings);

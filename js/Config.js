@@ -13,7 +13,8 @@ export const EVENTS = {
   exerciseSettingsChanged: 'exerciseSettingsChanged', // An exercise's settings have been changed
   planCreated: 'planCreated', // A plan has been created
   planDeleted: 'planDeleted', // A plan has been created
-  workoutCreated: 'workoutCreated', // A workout has been created 
+  workoutCreated: 'workoutCreated', // A workout has been created
+  workoutDeleted: 'workoutDeleted', // A workout has been deleted
   workoutExerciseSettingsChanged: 'workoutExerciseSettingsChanged', // An xercises settings have been changed
   workoutExerciseDeleted: 'workoutExerciseDeleted', // A workout exercise has been deleted
   workoutExerciseAdded: 'workoutExerciseAdded', // An exercise has been added to the workout

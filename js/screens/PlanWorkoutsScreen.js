@@ -63,6 +63,7 @@ export default class PlanWorkoutsScreen extends Component<Props> {
     this.onItemPress = this.onItemPress.bind(this);
     this.deletePlan = this.deletePlan.bind(this);
     this.onWorkoutCreated = this.onWorkoutCreated.bind(this);
+    this.onWorkoutDeleted = this.onWorkoutDeleted.bind(this);
 
   }
 
@@ -85,15 +86,18 @@ export default class PlanWorkoutsScreen extends Component<Props> {
   componentDidMount() {
     // Add event listeners
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutCreated, this.onWorkoutCreated)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutDeleted, this.onWorkoutDeleted)
   }
 
   componentWillUnmount() {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutCreated, this.onWorkoutCreated)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutDeleted, this.onWorkoutDeleted)
   }
 
   // Event handlers
   onWorkoutCreated(event) {this.loadWorkouts()}
+  onWorkoutDeleted(event) {this.loadWorkouts()}
 
   /**
    * Extracts the flat list data of a workout

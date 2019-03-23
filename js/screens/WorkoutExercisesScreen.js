@@ -43,13 +43,14 @@ export default class WorkoutExercisesScreen extends Component<Props> {
     super(props);
 
     this.state = {
-      plan: props.navigation.getParam('workout'),
+      workout: props.navigation.getParam('workout'),
       selectedExercise: null,
       exModalVisible: false,
     }
 
     // Binding
     this.selectExercise = this.selectExercise.bind(this);
+    this.deleteWorkout = this.deleteWorkout.bind(this);
     this.loadExercises = this.loadExercises.bind(this);
     this.onWorkoutExerciseSettingsChanged = this.onWorkoutExerciseSettingsChanged.bind(this);
     this.onWorkoutExerciseDeleted = this.onWorkoutExerciseDeleted.bind(this);
@@ -82,9 +83,7 @@ export default class WorkoutExercisesScreen extends Component<Props> {
    */
   loadExercises() {
 
-    let workout = this.props.navigation.getParam('workout');
-
-    new TrainingAPI().getWorkoutExercises(workout.planId, workout.id).then((data) => {
+    new TrainingAPI().getWorkoutExercises(this.state.workout.planId, this.state.workout.id).then((data) => {
 
       this.setState({exercises: []}, () => {this.setState({exercises: data.exercises})});
 
@@ -110,12 +109,34 @@ export default class WorkoutExercisesScreen extends Component<Props> {
   }
 
   /**
+   * Deletes the current workout
+   */
+  deleteWorkout() {
+
+    new TrainingAPI().deleteWorkout(this.state.workout.planId, this.state.workout.id).then((data) => {
+
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.workoutDeleted});
+
+      this.props.navigation.goBack();
+
+    })
+
+  }
+
+  /**
    * Renders the home screen
    */
   render() {
 
     return (
       <View style={styles.container}>
+
+        <View style={styles.actionsContainer}>
+          <TRC.TotoIconButton
+              image={require('TotoReactTraining/img/trash.png')}
+              onPress={this.deleteWorkout}
+              />
+        </View>
 
         <GymExercisesList
             data={this.state.exercises}
@@ -140,4 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     paddingTop: 24,
   },
+  actionsContainer: {
+    marginBottom: 24,
+  }
 });

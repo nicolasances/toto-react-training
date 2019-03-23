@@ -45,6 +45,16 @@ export default class TrainingAPI {
   }
 
   /**
+   * Deletes the workout
+   */
+  deleteWorkout(planId, workoutId) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId, {method: 'DELETE',}).then((response => response.json()));
+
+  }
+
+  /**
    * Deletes the plan
    */
   deletePlan(planId) {

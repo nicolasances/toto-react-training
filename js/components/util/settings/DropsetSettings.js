@@ -24,15 +24,6 @@ export default class DropsetSettings extends Component {
       exercise: props.exercise,
     }
 
-    // Set the min and max weight
-    let weightRange1 = new WeightRange(props.exercise.weight1);
-    let weightRange2 = new WeightRange(props.exercise.weight2);
-
-    this.minWeight1 = weightRange1.minWeight();
-    this.maxWeight1 = weightRange1.maxWeight();
-    this.minWeight2 = weightRange2.minWeight();
-    this.maxWeight2 = weightRange2.maxWeight();
-
     // Bindings
     this.onChangeSets = this.onChangeSets.bind(this);
     this.onChangeReps = this.onChangeReps.bind(this);
@@ -112,10 +103,10 @@ export default class DropsetSettings extends Component {
           <Measurement title="Reps" value={this.state.exercise.reps1} minValue={1} maxValue={20} increment={1} onValueChange={this.onChangeReps} />
         </View>
         <View style={styles.measurementContainer}>
-          <Measurement title="Upper weight" value={this.state.exercise.weight1} minValue={this.minWeight1} maxValue={this.maxWeight1} increment={0.25} onValueChange={this.onChangeWeight1} />
+          <Measurement title="Upper weight" value={this.state.exercise.weight1} onValueChange={this.onChangeWeight1} />
         </View>
         <View style={styles.measurementContainer}>
-          <Measurement title="Lower weight" value={this.state.exercise.weight2} minValue={this.minWeight2} maxValue={this.maxWeight2} increment={0.25} onValueChange={this.onChangeWeight2} />
+          <Measurement title="Lower weight" value={this.state.exercise.weight2} onValueChange={this.onChangeWeight2} />
         </View>
       </View>
     )

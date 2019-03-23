@@ -24,12 +24,6 @@ export default class SingleSettings extends Component {
       exercise: props.exercise,
     }
 
-    // Set the min and max weight
-    let weightRange = new WeightRange(props.exercise.weight);
-
-    this.minWeight = weightRange.minWeight();
-    this.maxWeight = weightRange.maxWeight();
-
     // Bindings
     this.onChangeSets = this.onChangeSets.bind(this);
     this.onChangeReps = this.onChangeReps.bind(this);
@@ -94,7 +88,7 @@ export default class SingleSettings extends Component {
           <Measurement title="Reps" value={this.state.exercise.reps} minValue={1} maxValue={20} increment={1} onValueChange={this.onChangeReps} />
         </View>
         <View style={styles.measurementContainer}>
-          <Measurement title="Weight" value={this.state.exercise.weight} minValue={this.minWeight} maxValue={this.maxWeight} increment={0.25} onValueChange={this.onChangeWeight} />
+          <Measurement title="Weight" value={this.state.exercise.weight} onValueChange={this.onChangeWeight} />
         </View>
       </View>
     )

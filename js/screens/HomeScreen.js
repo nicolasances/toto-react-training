@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
-    paddingTop: 24
+    paddingTop: 24,
   },
   mainButtonContainer: {
     marginVertical: 24

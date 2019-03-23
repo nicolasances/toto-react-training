@@ -57,7 +57,7 @@ class IntensityChart extends Component {
     if (props.data == null || props.data == []) return;
 
     // Sets the "width" of the "column" containing each day
-    this.columnWidth = window.width / props.data.length;
+    this.columnWidth = (window.width - 12) / props.data.length;
 
     // Set the height of the chart
     this.height = props.height == null ? 250 : props.height;
@@ -248,7 +248,7 @@ class IntensityChart extends Component {
     // Create the stack
     let stack = (
       <View key={'painb' + Math.random()} style={[styles.painBubblesStack, {width: this.columnWidth}]}>
-      {painCircles}
+        {painCircles}
       </View>
     )
 
@@ -286,7 +286,7 @@ export default withNavigation(Animated.createAnimatedComponent(IntensityChart));
  */
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   },
   valueLabel: {
     color: TRC.TotoTheme.theme.COLOR_ACCENT,
@@ -309,9 +309,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   muscleCircle: {
-    height: 36,
-    width: 36,
-    borderRadius: 18,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
     marginTop: 6,

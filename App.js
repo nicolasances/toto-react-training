@@ -15,6 +15,8 @@ import PlansScreen from './js/screens/PlansScreen';
 import PlanCreationScreen from './js/screens/PlanCreationScreen';
 import WorkoutExercisesScreen from './js/screens/WorkoutExercisesScreen';
 import CreateExerciseScreen from './js/screens/CreateExerciseScreen';
+import ArchiveScreen from './js/screens/ArchiveScreen';
+import ArchiveExercisesScreen from './js/screens/ArchiveExercisesScreen';
 
 // Client Id
 const clientId = '209706877536-7dhk9v7usdo9dl467famm4dmgh00pnqv.apps.googleusercontent.com';
@@ -32,6 +34,8 @@ const RootStack = createStackNavigator({
   PlanCreationScreen: {screen: PlanCreationScreen},
   WorkoutExercisesScreen: {screen: WorkoutExercisesScreen},
   CreateExerciseScreen: {screen: CreateExerciseScreen},
+  ArchiveScreen: {screen: ArchiveScreen},
+  ArchiveExercisesScreen: {screen: ArchiveExercisesScreen},
 
 }, {
   initialRouteName: 'HomeScreen',

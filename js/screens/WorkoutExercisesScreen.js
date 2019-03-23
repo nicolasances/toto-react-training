@@ -53,6 +53,7 @@ export default class WorkoutExercisesScreen extends Component<Props> {
     this.loadExercises = this.loadExercises.bind(this);
     this.onWorkoutExerciseSettingsChanged = this.onWorkoutExerciseSettingsChanged.bind(this);
     this.onWorkoutExerciseDeleted = this.onWorkoutExerciseDeleted.bind(this);
+    this.onWorkoutExerciseAdded = this.onWorkoutExerciseAdded.bind(this);
 
   }
 
@@ -63,6 +64,7 @@ export default class WorkoutExercisesScreen extends Component<Props> {
     // Add event listeners
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutExerciseSettingsChanged, this.onWorkoutExerciseSettingsChanged)
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutExerciseDeleted, this.onWorkoutExerciseDeleted)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutExerciseAdded, this.onWorkoutExerciseAdded)
 
     // Load data
     this.loadExercises();
@@ -72,6 +74,7 @@ export default class WorkoutExercisesScreen extends Component<Props> {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutExerciseSettingsChanged, this.onWorkoutExerciseSettingsChanged)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutExerciseDeleted, this.onWorkoutExerciseDeleted)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutExerciseAdded, this.onWorkoutExerciseAdded)
   }
 
   /**
@@ -93,7 +96,8 @@ export default class WorkoutExercisesScreen extends Component<Props> {
    * Reacts to any change on exercises
    */
   onWorkoutExerciseSettingsChanged(event) {this.loadExercises();}
-  onWorkoutExerciseDeleted(event) {this.loadExercises();}
+  onWorkoutExerciseDeleted(event) {this.loadExercises(); this.setState({exModalVisible: false});}
+  onWorkoutExerciseAdded(event) {this.loadExercises();}
 
   /**
    * Reacts to the selection of an exercise

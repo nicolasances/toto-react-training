@@ -27,7 +27,7 @@ class ExerciseDataExtractor {
 
     var q = (value) => {return value == null ? '?' : value}
 
-    if (ex.type == 'single') {
+    if (ex.type == null || ex.type == 'single') {
       s1 = ex.sets; r1 = ex.reps; w1 = ex.weight;
       title1 = ex.name;
       subtitle1 = q(s1) + ' X ' + q(r1) + '  ' + q(w1) + ' Kg';

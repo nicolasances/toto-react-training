@@ -11,7 +11,7 @@ import moment from 'moment';
  *  - dataExtractor()       : a function that takes the flat list item and extract the following data structure:
  *                            { title :   the title, main text, of this item,
  *                              avatar :  an object describing the avatar:
- *                                      { type: 'number, image'
+ *                                      { type: 'number, image', 'string'
  *                                        value: (optional) 'a value, in case of type number, an image in case of type image'
  *                                        unit: (optional) 'the unit, in case of type number'
  *                                       }
@@ -99,6 +99,10 @@ class Item extends Component {
       // If the avatar is a NUMBER
       if (data.avatar.type == 'number') {
         avatar = <Text style={styles.avatarText}>{data.avatar.value.toFixed(0)}</Text>
+      }
+      // If the avatar is a STRING
+      else if (data.avatar.type == 'string') {
+        avatar = <Text style={styles.avatarText}>{data.avatar.value}</Text>
       }
       // If the avatar is an IMAGE
       else if (data.avatar.type == 'image') {

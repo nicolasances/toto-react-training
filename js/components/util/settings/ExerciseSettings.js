@@ -27,6 +27,7 @@ export default class ExerciseSettings extends Component {
     this.saveExercise = this.saveExercise.bind(this);
     this.saveSessionExercise = this.saveSessionExercise.bind(this);
     this.saveWorkoutExercise = this.saveWorkoutExercise.bind(this);
+    this.deleteExercise = this.deleteExercise.bind(this);
 
   }
 
@@ -83,7 +84,7 @@ export default class ExerciseSettings extends Component {
     else if (this.state.exercise.workoutId) this.saveWorkoutExercise(this.state.exercise, settings);
 
     // Close the modal
-    this.props.onSaved();
+    this.props.onSaved(settings);
 
   }
 

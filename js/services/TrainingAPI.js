@@ -88,7 +88,7 @@ export default class TrainingAPI {
   deleteWorkoutExercise(planId, workoutId, exerciseId) {
 
     // Post the data
-    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises/' + exerciseId, {method: 'DELETE'}).then((response => response.json()));
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises/' + exerciseId, {method: 'DELETE'}).then((response) => {console.log(response);return response.json()});
 
   }
 
@@ -103,6 +103,20 @@ export default class TrainingAPI {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(settings)
+    }).then((response => response.json()));
+
+  }
+
+  /**
+   * Adds an exercise to the workout
+   */
+  addExerciseToWorkout(planId, workoutId, exercise) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts/' + workoutId + '/exercises', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(exercise)
     }).then((response => response.json()));
 
   }
@@ -301,6 +315,24 @@ export default class TrainingAPI {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({painLevel: painLevel})
     }).then((response => response.json()));
+
+  }
+
+  /**
+   * Returns the list of muscles in the archive
+   */
+  getArchiveMuscles() {
+
+    return new TotoAPI().fetch('/training/archive/muscles').then((response) => response.json());
+
+  }
+
+  /**
+   * Gets the exercises for the given muscle
+   */
+  getArchiveExercises(muscleId) {
+
+    return new TotoAPI().fetch('/training/archive/muscles/' + muscleId + '/exercises').then((response) => response.json());
 
   }
 

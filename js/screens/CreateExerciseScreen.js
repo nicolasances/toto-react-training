@@ -256,7 +256,8 @@ export default class CreateExerciseScreen extends Component<Props> {
         weight3: settings.weight3,
         ex1: settings.ex1,
         ex2: settings.ex2
-      }
+      },
+      exercises: []
     }, () => {this.setState({exercises: [this.state.exercise]})})
 
   }

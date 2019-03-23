@@ -32,6 +32,13 @@ export default class PlanWorkoutsScreen extends Component<Props> {
                         color={TRC.TotoTheme.theme.COLOR_THEME}
                         titleColor={TRC.TotoTheme.theme.COLOR_TEXT}
                         back={true}
+                        rightButton={{
+                          image: require('TotoReactTraining/img/add.png'),
+                          navData: {
+                            screen: 'CreateWorkoutScreen',
+                            data: {plan: navigation.getParam('plan')}
+                          }
+                        }}
 
                         />
       }
@@ -55,6 +62,7 @@ export default class PlanWorkoutsScreen extends Component<Props> {
     // Bindings
     this.onItemPress = this.onItemPress.bind(this);
     this.deletePlan = this.deletePlan.bind(this);
+    this.onWorkoutCreated = this.onWorkoutCreated.bind(this);
 
   }
 
@@ -76,13 +84,16 @@ export default class PlanWorkoutsScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.workoutCreated, this.onWorkoutCreated)
   }
 
   componentWillUnmount() {
     // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.workoutCreated, this.onWorkoutCreated)
   }
+
+  // Event handlers
+  onWorkoutCreated(event) {this.loadWorkouts()}
 
   /**
    * Extracts the flat list data of a workout

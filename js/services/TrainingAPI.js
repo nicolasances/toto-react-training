@@ -74,6 +74,22 @@ export default class TrainingAPI {
   }
 
   /**
+   * Create a new workout in the specified plan
+   */
+  postWorkout(planId, workoutName) {
+
+    // Post the data
+    return new TotoAPI().fetch('/training/plan/plans/' + planId + '/workouts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({planId: planId, name: workoutName})
+    }).then((response => response.json()));
+
+  }
+
+  /**
    * Retrieves the workout exercises
    */
   getWorkoutExercises(planId, workoutId) {

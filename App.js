@@ -17,6 +17,7 @@ import WorkoutExercisesScreen from './js/screens/WorkoutExercisesScreen';
 import CreateExerciseScreen from './js/screens/CreateExerciseScreen';
 import ArchiveScreen from './js/screens/ArchiveScreen';
 import ArchiveExercisesScreen from './js/screens/ArchiveExercisesScreen';
+import CreateWorkoutScreen from './js/screens/CreateWorkoutScreen';
 
 // Client Id
 const clientId = '209706877536-7dhk9v7usdo9dl467famm4dmgh00pnqv.apps.googleusercontent.com';
@@ -36,6 +37,7 @@ const RootStack = createStackNavigator({
   CreateExerciseScreen: {screen: CreateExerciseScreen},
   ArchiveScreen: {screen: ArchiveScreen},
   ArchiveExercisesScreen: {screen: ArchiveExercisesScreen},
+  CreateWorkoutScreen: {screen: CreateWorkoutScreen},
 
 }, {
   initialRouteName: 'HomeScreen',

@@ -3,6 +3,7 @@ export const API_URL = 'https://imatzdev.it/apis';
 export const AUTH = 'Basic c3RvOnRvdG8=';
 
 export const EVENTS = {
+  userInfoChanged: 'userInfoChanged', // User info received from Google
   sessionCreated: 'sessionCreated', // A new gym session has been created
   sessionDeleted: 'sessionDeleted', // A session has been deleted
   sessionCompleted: 'sessionCompleted', // A session has been completed
